@@ -10,11 +10,7 @@ load_dotenv()
 
 cfg = AppConfig.from_env()
 embedder = get_embedder(cfg.EMBED_MODEL)
-
-# Ensure vector index exists (dimension must match embedding model)
 ensure_index(cfg, dim=embedder.get_sentence_embedding_dimension())
-
-# --- UI CALLBACKS ---
 
 def ui_ingest(files, namespace):
     if not files:
@@ -64,12 +60,13 @@ with gr.Blocks(title="Personal RAG (Propositional)") as demo:
             gr.Textbox(label="Pinecone index", value=os.getenv("PINECONE_INDEX","personal-rag"), interactive=False)
             gr.Textbox(label="Embedding model", value=os.getenv("EMBED_MODEL","BAAI/bge-small-en-v1.5"), interactive=False)
     with gr.Tab("Costs"):
-        gr.Markdown("Simple estimator (edit numbers). Always verify current pricing.")
-        monthly_queries = gr.Number(label="Monthly Qs", value=200)
-        prompt_tk = gr.Number(label="Avg Prompt Tokens", value=600)
-        completion_tk = gr.Number(label="Avg Completion Tokens", value=400)
-        price_per_1k = gr.Number(label="LLM Price per 1K tokens (USD)", value=0.5)
-        base_fixed = gr.Number(label="Base fixed (e.g., vector DB minimum)", value=50.0)
+        # Defaults are sourced from .env (COST_*), populated from your spreadsheet
+        gr.Markdown("Simple estimator (edit numbers). Defaults pulled from `.env` → COST_*")
+        monthly_queries = gr.Number(label="Monthly Qs", value=float(os.getenv("COST_MONTHLY_QS", "6000")))
+        prompt_tk = gr.Number(label="Avg Prompt Tokens", value=float(os.getenv("COST_PROMPT_TOKENS", "300")))
+        completion_tk = gr.Number(label="Avg Completion Tokens", value=float(os.getenv("COST_COMPLETION_TOKENS", "300")))
+        price_per_1k = gr.Number(label="LLM Price per 1K tokens (USD)", value=float(os.getenv("COST_PRICE_PER_1K", "0.000375")))
+        base_fixed = gr.Number(label="Base fixed (e.g., vector DB minimum)", value=float(os.getenv("COST_BASE_FIXED", "50.0")))
         estimate = gr.Textbox(label="Estimate", lines=2)
         gr.Button("Estimate").click(ui_costs, [monthly_queries, prompt_tk, completion_tk, price_per_1k, base_fixed], estimate)
 
