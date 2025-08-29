@@ -17,7 +17,6 @@ def ndcg_at_k(relevant_ids: str, predicted_ids: str) -> float:
     return dcg / ideal if ideal > 0 else 0.0
 
 def span_accuracy(true_spans: List[Dict], pred_spans: List[Dict]) -> float:
-    # Jaccard over character indices unioned across spans
     def to_set(spans):
         S = set()
         for sp in spans or []:
