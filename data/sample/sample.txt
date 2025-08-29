@@ -1,0 +1,2 @@
+This is a tiny sample note. It mentions that BGE-small-en-v1.5 produces 384-dimensional embeddings
+and is suitable for RAG applications. Pinecone indexes must match the embedding dimension.
