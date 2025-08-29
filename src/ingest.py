@@ -7,6 +7,7 @@ from .propositionizer import propositionize_paragraphs
 from .vectorstore import upsert_props
 
 def _hash(s: str) -> str:
+    import hashlib
     return hashlib.sha1(s.encode("utf-8")).hexdigest()[:10]
 
 def ingest_files(cfg, embedder, files: List[Path], namespace: str) -> Dict:

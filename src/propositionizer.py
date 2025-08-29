@@ -15,7 +15,6 @@ def _openrouter_headers(cfg):
         "Authorization": f"Bearer {cfg.OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
     }
-    # Optional attribution headers
     if cfg.OPENROUTER_REFERER:
         hdr["HTTP-Referer"] = cfg.OPENROUTER_REFERER
     if cfg.OPENROUTER_TITLE:
@@ -37,12 +36,11 @@ def propositionize_paragraphs(cfg, paragraphs: List[str]) -> List[Dict]:
         r = requests.post(url, headers=_openrouter_headers(cfg), json=payload, timeout=60)
         r.raise_for_status()
         content = r.json()["choices"][0]["message"]["content"]
-        # Be tolerant to formatting by finding first/last JSON block
         start = content.find("{")
         end = content.rfind("}")
         data = json.loads(content[start:end+1]) if start!=-1 and end!=-1 else {"propositions":[], "parent_excerpt":para}
         if "parent_excerpt" not in data:
             data["parent_excerpt"] = para
         out.append(data)
-        time.sleep(0.2)  # mild pacing
+        time.sleep(0.2)
     return out

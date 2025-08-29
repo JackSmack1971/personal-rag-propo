@@ -16,7 +16,6 @@ def ensure_index(cfg, dim: int):
         )
 
 def upsert_props(cfg, vectors: List[Dict], namespace: str):
-    # vectors: [{id, values, metadata}, ...]
     pc = _client(cfg)
     index = pc.Index(cfg.PINECONE_INDEX)
     index.upsert(vectors=vectors, namespace=namespace)

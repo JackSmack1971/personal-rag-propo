@@ -20,7 +20,6 @@ def read_markdown(path: Path) -> str:
 
 def to_paragraphs(text: str, min_len: int = 200) -> List[str]:
     parts = [p.strip() for p in text.split("\n\n") if p.strip()]
-    # Merge very short paragraphs into neighbors
     merged: List[str] = []
     buf = ""
     for p in parts:

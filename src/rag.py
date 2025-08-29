@@ -30,7 +30,7 @@ def _call_llm(cfg, system: str, question: str, context: str) -> str:
         "model": cfg.OPENROUTER_MODEL,
         "messages": [
             {"role":"system","content": system},
-            {"role":"user","content": f"Question: {question}\n\nSources:\n{context}"}
+            {"role":"user","content": f"Question: {question}\\n\\nSources:\\n{context}"}
         ],
         "temperature": 0.0
     }
@@ -39,15 +39,11 @@ def _call_llm(cfg, system: str, question: str, context: str) -> str:
     return r.json()["choices"][0]["message"]["content"]
 
 def rag_chat(cfg, embedder, message: str, history: List[Tuple[str,str]]):
-    # 1) Embed query
     qvec = embedder.encode(message, normalize_embeddings=True).tolist()
-    # 2) Retrieve propositions
     res = query(cfg, qvec, top_k=cfg.TOP_K, namespace=cfg.NAMESPACE)
     matches = [{"id":m["id"], "score":m["score"], "metadata": m.get("metadata",{})} for m in res.get("matches", [])]
-    # 3) Expand context
     ctx = _compose_context(matches)
     if not matches:
         return "No strong match found."
-    # 4) LLM answer
     answer = _call_llm(cfg, SYSTEM_PROMPT, message, ctx)
     return answer
