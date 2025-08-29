@@ -1,0 +1,10 @@
+gradio>=4.38.0
+python-dotenv>=1.0.1
+requests>=2.32.0
+sentence-transformers>=3.0.1
+torch>=2.2.0
+pinecone>=4.0.0
+pypdf>=4.2.0
+tqdm>=4.66.0
+numpy>=1.26.0
+pandas>=2.1.0
