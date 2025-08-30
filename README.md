@@ -50,7 +50,7 @@ This prototype implements a local retrieval-augmented generation (RAG) system fo
 ## 🗺 Visual Architecture Overview
 
 ### High-Level System Architecture
-
+```mermaid
 flowchart LR
   subgraph ING["Ingestion"]
     A["User docs: PDF/TXT/MD"] --> B[Parsers]
@@ -78,7 +78,6 @@ flowchart LR
   end
 
   H -->|"Store embeddings + metadata"| VS[(Pinecone Index)]
-
 ```
 
 ### Core Classes & Modules
