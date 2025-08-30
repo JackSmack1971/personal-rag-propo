@@ -1,0 +1,55 @@
+{
+  "schema": "HANDOFF/V1",
+  "handoff_id": "research-phase-2025-08-30",
+  "from": {
+    "mode": "sparc-orchestrator",
+    "timestamp": "2025-08-30T04:27:00Z"
+  },
+  "to": {
+    "mode": "data-researcher"
+  },
+  "objective": "Conduct comprehensive research to validate and enhance the Personal RAG Chatbot specifications with evidence-based insights",
+  "inputs": [
+    "docs/specifications/security-threat-model.md",
+    "docs/specifications/performance-requirements-spec.md",
+    "docs/specifications/moe-architecture-spec.md",
+    "docs/specifications/evaluation-harness-spec.md",
+    "docs/specifications/2025-stack-migration-spec.md",
+    "memory-bank/productContext.md",
+    "AGENTS.md"
+  ],
+  "acceptance_criteria": [
+    "Research findings must be evidence-based with citations to authoritative sources",
+    "All claims must have confidence scores and supporting data",
+    "Research must address gaps identified in specifications",
+    "Findings must be actionable for implementation decisions",
+    "Research must cover security, performance, and MoE effectiveness",
+    "External research claims must be verified and not taken at face value"
+  ],
+  "artifacts": [
+    "docs/research/security-research-report.md",
+    "docs/research/performance-research-report.md",
+    "docs/research/moe-effectiveness-research.md",
+    "docs/research/implementation-recommendations.md",
+    "docs/research/risk-assessment-validation.md"
+  ],
+  "context": {
+    "project_phase": "Research Phase",
+    "business_domain": "Personal knowledge management and research productivity",
+    "technical_scope": "Local-first retrieval-augmented chatbot with MoE enhancements",
+    "key_requirements": [
+      "Proposition-level document extraction and embedding",
+      "Advanced retrieval with citation accuracy",
+      "MoE architecture for intelligent routing and reranking",
+      "Production-ready security and performance",
+      "2025 technology stack migration"
+    ],
+    "quality_gates": [
+      "All research claims must be evidence-based",
+      "Confidence levels must be explicitly stated",
+      "Sources must be authoritative and current",
+      "Findings must directly support specification decisions"
+    ],
+    "business_impact": "Research will validate technical decisions affecting product reliability, security, and user experience"
+  }
+}

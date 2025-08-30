@@ -1,0 +1,59 @@
+{
+  "schema": "HANDOFF/V1",
+  "handoff_id": "factcheck-phase-2025-08-30",
+  "from": {
+    "mode": "sparc-orchestrator",
+    "timestamp": "2025-08-30T04:35:00Z"
+  },
+  "to": {
+    "mode": "rapid-fact-checker"
+  },
+  "objective": "Validate all research claims and technical assertions before implementation decisions",
+  "inputs": [
+    "docs/research/security-research-report.md",
+    "docs/research/performance-research-report.md",
+    "docs/research/moe-effectiveness-research.md",
+    "docs/research/implementation-recommendations.md",
+    "docs/research/risk-assessment-validation.md",
+    "docs/specifications/security-threat-model.md",
+    "docs/specifications/performance-requirements-spec.md",
+    "docs/specifications/moe-architecture-spec.md",
+    "AGENTS.md"
+  ],
+  "acceptance_criteria": [
+    "All research claims must be fact-checked against primary sources",
+    "Technical assertions must be validated for accuracy and currency",
+    "Performance benchmarks must be verified against current data",
+    "Security claims must be confirmed with authoritative sources",
+    "Implementation recommendations must be validated for feasibility",
+    "Any factual inaccuracies must be corrected with evidence",
+    "Confidence scores must be adjusted based on verification results"
+  ],
+  "artifacts": [
+    "docs/factcheck/validation-report.md",
+    "docs/factcheck/corrected-claims.md",
+    "docs/factcheck/source-verification.md",
+    "docs/factcheck/confidence-adjustments.md",
+    "docs/factcheck/implementation-readiness.md"
+  ],
+  "context": {
+    "project_phase": "Fact-Checking Phase",
+    "business_domain": "Personal knowledge management and research productivity",
+    "technical_scope": "Local-first RAG chatbot with MoE enhancements and 2025 tech stack",
+    "key_requirements": [
+      "Proposition-level document processing with citation accuracy",
+      "MoE architecture for intelligent retrieval routing",
+      "Production-grade security against RAG poisoning attacks",
+      "Performance optimization for 40-60% improvement targets",
+      "Evidence-based implementation decisions"
+    ],
+    "quality_gates": [
+      "Zero tolerance for unverified technical claims",
+      "All performance benchmarks must be current (2024-2025)",
+      "Security research must be validated against primary sources",
+      "Implementation recommendations must be factually accurate",
+      "Confidence scores must reflect verification results"
+    ],
+    "business_impact": "Fact-checking ensures implementation decisions are based on verified information, reducing technical risk and improving project success probability"
+  }
+}

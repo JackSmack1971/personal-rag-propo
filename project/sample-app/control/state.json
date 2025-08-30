@@ -1,0 +1,19 @@
+﻿{
+  "schema": "STATE/V1",
+  "version": "1.0.0",
+  "project_id": "sample-app",
+  "updated_at": "2025-08-30T05:01:00Z",
+  "current": "implementation",
+  "nodes": {
+    "spec":       { "mode": "sparc-specification-writer", "status": "completed" },
+    "research":   { "mode": "data-researcher",            "status": "completed" },
+    "factcheck":  { "mode": "rapid-fact-checker",         "status": "completed" },
+    "security":   { "mode": "security-architect",         "status": "completed" },
+    "implement":  { "mode": "sparc-code-implementer",     "status": "ready" },
+    "test":       { "mode": "sparc-qa-analyst",           "status": "pending" },
+    "deploy":     { "mode": "sparc-integrator",           "status": "pending" }
+  },
+  "active": [],
+  "completed": ["spec", "research", "factcheck", "security"],
+  "failed": []
+}

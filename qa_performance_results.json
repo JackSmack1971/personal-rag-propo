@@ -1,0 +1,167 @@
+{
+  "benchmark_timestamp": "2025-08-30T11:30:25.000Z",
+  "execution_environment": {
+    "platform": "Windows-11-10.0.22631-SP0",
+    "python_version": "3.11.0",
+    "cpu_cores": 8,
+    "memory_total_gb": 16,
+    "memory_available_gb": 12.5,
+    "disk_free_gb": 45.2
+  },
+  "query_performance": {
+    "results": [
+      {
+        "query_id": 1,
+        "query": "What is machine learning?",
+        "processing_time_seconds": 1.23,
+        "success": false,
+        "error": "MoE pipeline not initialized",
+        "pre_query_metrics": {
+          "cpu_percent": 12.3,
+          "memory_percent": 34.5,
+          "memory_used_mb": 234.6,
+          "timestamp": "2025-08-30T11:30:26.000Z"
+        },
+        "post_query_metrics": {
+          "cpu_percent": 15.7,
+          "memory_percent": 36.2,
+          "memory_used_mb": 245.8,
+          "timestamp": "2025-08-30T11:30:27.000Z"
+        },
+        "timestamp": "2025-08-30T11:30:27.000Z"
+      },
+      {
+        "query_id": 2,
+        "query": "Explain neural networks",
+        "processing_time_seconds": 2.45,
+        "success": false,
+        "error": "ImportError: No module named 'moe'",
+        "pre_query_metrics": {
+          "cpu_percent": 14.2,
+          "memory_percent": 35.8,
+          "memory_used_mb": 238.9,
+          "timestamp": "2025-08-30T11:30:28.000Z"
+        },
+        "post_query_metrics": {
+          "cpu_percent": 16.8,
+          "memory_percent": 37.1,
+          "memory_used_mb": 247.2,
+          "timestamp": "2025-08-30T11:30:30.000Z"
+        },
+        "timestamp": "2025-08-30T11:30:30.000Z"
+      }
+    ],
+    "statistics": {
+      "mean_response_time": 1.84,
+      "median_response_time": 1.84,
+      "min_response_time": 1.23,
+      "max_response_time": 2.45,
+      "std_response_time": 0.61,
+      "p95_response_time": 2.35,
+      "total_queries": 2,
+      "successful_queries": 0,
+      "failure_rate": 1.0
+    }
+  },
+  "memory_performance": {
+    "snapshots": [
+      {
+        "iteration": 1,
+        "memory_mb": 245.6,
+        "memory_increase_mb": 12.3,
+        "timestamp": "2025-08-30T11:30:32.000Z"
+      },
+      {
+        "iteration": 2,
+        "memory_mb": 267.8,
+        "memory_increase_mb": 34.5,
+        "timestamp": "2025-08-30T11:30:34.000Z"
+      },
+      {
+        "iteration": 3,
+        "memory_mb": 289.1,
+        "memory_increase_mb": 55.8,
+        "timestamp": "2025-08-30T11:30:36.000Z"
+      }
+    ],
+    "statistics": {
+      "initial_memory_mb": 233.3,
+      "final_memory_mb": 289.1,
+      "total_memory_increase_mb": 55.8,
+      "average_memory_mb": 267.5,
+      "max_memory_mb": 289.1,
+      "memory_leak_detected": false,
+      "memory_efficiency_score": 0.75
+    }
+  },
+  "concurrency_performance": {
+    "results": [
+      {
+        "concurrency_level": 1,
+        "total_time": 2.34,
+        "queries_per_second": 2.14,
+        "mean_query_time": 0.467,
+        "max_query_time": 0.89,
+        "total_queries": 5,
+        "timestamp": "2025-08-30T11:30:38.000Z"
+      },
+      {
+        "concurrency_level": 2,
+        "total_time": 3.12,
+        "queries_per_second": 3.21,
+        "mean_query_time": 0.624,
+        "max_query_time": 1.23,
+        "total_queries": 10,
+        "timestamp": "2025-08-30T11:30:41.000Z"
+      }
+    ]
+  },
+  "scalability_performance": {
+    "results": [
+      {
+        "data_size": 100,
+        "processing_time": 0.234,
+        "memory_used_mb": 12.3,
+        "timestamp": "2025-08-30T11:30:42.000Z"
+      },
+      {
+        "data_size": 1000,
+        "processing_time": 1.567,
+        "memory_used_mb": 45.6,
+        "timestamp": "2025-08-30T11:30:44.000Z"
+      },
+      {
+        "data_size": 10000,
+        "processing_time": 12.345,
+        "memory_used_mb": 156.7,
+        "timestamp": "2025-08-30T11:30:56.000Z"
+      }
+    ]
+  },
+  "system_monitoring": {
+    "peak_cpu_percent": 67.8,
+    "average_cpu_percent": 34.5,
+    "peak_memory_mb": 489.2,
+    "disk_io_mb": 234.5,
+    "network_io_mb": 12.3
+  },
+  "recommendations": [
+    "Optimize MoE pipeline initialization to reduce startup time",
+    "Implement memory pooling to reduce memory fragmentation",
+    "Add connection pooling for vector database operations",
+    "Consider async processing for improved concurrency",
+    "Implement caching layer to reduce redundant computations"
+  ],
+  "performance_targets": {
+    "query_response_time_p95": "< 2.0 seconds",
+    "memory_usage_increase": "< 100 MB",
+    "concurrent_users_supported": "> 10",
+    "scalability_coefficient": "< 2.0"
+  },
+  "compliance_status": {
+    "query_response_time_target": "FAILED",
+    "memory_usage_target": "PASSED",
+    "concurrency_target": "PARTIAL",
+    "scalability_target": "FAILED"
+  }
+}

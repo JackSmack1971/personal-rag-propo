@@ -1,0 +1,144 @@
+# 2025 Stack Requirements - Personal RAG Chatbot
+# Migration from v4.x to 2025 enhanced stack
+# Generated: August 30, 2025
+# Compatible with: Python 3.10+ (3.11 recommended)
+
+# =============================================================================
+# CORE FRAMEWORKS
+# =============================================================================
+
+# UI Framework - Major upgrade with SSR and PWA support
+gradio>=5.42.0,<6.0.0
+
+# Machine Learning - Multi-backend embedding support
+sentence-transformers>=5.1.0,<6.0.0
+torch>=2.8.0,<3.0.0
+
+# Vector Database - Package renamed, gRPC client
+pinecone[grpc]>=7.0.0,<8.0.0
+
+# =============================================================================
+# DATA PROCESSING
+# =============================================================================
+
+# PDF Processing - Enhanced security and parsing
+pypdf>=6.0.0,<7.0.0
+
+# Numerical Computing - Performance improvements, free-threaded
+numpy>=2.3.2,<3.0.0
+
+# Data Analysis - String dtype improvements
+pandas>=2.3.0,<3.0.0
+
+# =============================================================================
+# UTILITIES & INFRASTRUCTURE
+# =============================================================================
+
+# HTTP Client - Critical security updates
+requests>=2.32.5,<3.0.0
+
+# Environment Management - Enhanced validation
+python-dotenv>=1.1.1,<2.0.0
+
+# Progress Bars - Feature enhancements
+tqdm>=4.67.0,<5.0.0
+
+# =============================================================================
+# DEVELOPMENT & TESTING (Optional)
+# =============================================================================
+
+# Code Quality - Type checking and linting
+# mypy>=1.8.0,<2.0.0
+# black>=24.0.0,<25.0.0
+# flake8>=7.0.0,<8.0.0
+
+# Testing Framework
+# pytest>=8.0.0,<9.0.0
+# pytest-cov>=4.1.0,<5.0.0
+
+# =============================================================================
+# INSTALLATION INSTRUCTIONS
+# =============================================================================
+#
+# For basic installation:
+# pip install -r requirements-2025.txt
+#
+# For development with testing:
+# pip install -r requirements-2025.txt
+# pip install mypy black flake8 pytest pytest-cov
+#
+# For GPU support (CUDA 11.8+ required):
+# pip install torch>=2.8.0 --index-url https://download.pytorch.org/whl/cu118
+#
+# For CPU-only optimization:
+# pip install sentence-transformers[onnx]
+#
+# =============================================================================
+# COMPATIBILITY NOTES
+# =============================================================================
+#
+# Python Version Support:
+# - Python 3.11: Recommended (optimal performance)
+# - Python 3.10: Minimum supported
+# - Python 3.9: NOT SUPPORTED (dropped by dependencies)
+# - Python 3.8: NOT SUPPORTED (dropped by pypdf)
+#
+# Operating System Support:
+# - Windows 10/11: Full support
+# - Linux (Ubuntu 20.04+): Full support
+# - macOS (10.15+): Full support
+#
+# Hardware Requirements:
+# - RAM: 8GB minimum, 16GB recommended
+# - CPU: Intel i5/AMD Ryzen 5 or equivalent
+# - GPU: Optional (NVIDIA GTX 1060 or equivalent)
+# - Storage: 10GB minimum, 20GB recommended
+#
+# =============================================================================
+# MIGRATION FROM V4.X STACK
+# =============================================================================
+#
+# Critical Changes:
+# 1. pinecone-client -> pinecone (package rename)
+# 2. Gradio 4.x -> 5.x (breaking UI changes)
+# 3. Sentence-Transformers 3.x -> 5.x (multi-backend)
+# 4. PyTorch 2.2.x -> 2.8.x (CUDA improvements)
+# 5. pypdf 4.x -> 6.x (API changes)
+#
+# Migration Order:
+# Phase 1: numpy, pandas, requests, python-dotenv, tqdm
+# Phase 2: torch, pypdf, sentence-transformers, pinecone
+# Phase 3: gradio (highest risk)
+#
+# Rollback: pip install -r requirements.txt (original)
+#
+# =============================================================================
+# SECURITY CONSIDERATIONS
+# =============================================================================
+#
+# - All dependencies scanned for known vulnerabilities
+# - Model loading uses trust_remote_code=False
+# - API keys stored securely in environment variables
+# - File uploads restricted to approved types and sizes
+# - HTTPS enforced for all external communications
+#
+# =============================================================================
+# PERFORMANCE OPTIMIZATIONS
+# =============================================================================
+#
+# - Gradio 5.x: 60-80% faster UI with SSR
+# - OpenVINO: 4x CPU inference performance
+# - gRPC: Improved vector database operations
+# - Enhanced caching: Reduced model load times
+# - Memory optimization: Better resource management
+#
+# =============================================================================
+# VERSION PINNING STRATEGY
+# =============================================================================
+#
+# - Major versions pinned for stability (<X.0.0)
+# - Minor versions flexible for bug fixes (>=X.Y.Z)
+# - Security updates can be applied within ranges
+# - Regular updates recommended quarterly
+#
+# =============================================================================
