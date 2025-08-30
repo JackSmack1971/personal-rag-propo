@@ -1,149 +1,75 @@
-# Personal RAG Chatbot (Propositional RAG) — 2025 Stack
+<!-- Decorative header image used in the README. 
+     Replace the path below with the final repo path you intend to use 
+     (e.g., ./assets/readme-header.png). -->
+<p align="center">
+  <img src="/mnt/data/b1ed897b-8ea7-402b-8cf5-acde81882746.png" alt="Decorative header image" width="100%" />
+</p>
 
-Local-first Windows-friendly starter with **Mixture of Experts (MoE) Architecture** using:
-- **Gradio 5.x** with SSR for enhanced UI performance
-- **Pinecone** with gRPC client for improved vector operations
-- **OpenRouter** as the LLM provider with enhanced cost monitoring
-- **Sentence-Transformers 5.x** with multi-backend support (torch/onnx/openvino)
-- **Mixture of Experts (MoE)** with intelligent routing, adaptive retrieval, and multi-stage reranking
+# Personal Propositional RAG Chatbot (Prototype)
 
-> This is a **personal** project scaffold featuring state-of-the-art 2025 technology stack. It favors free/OSS components and keeps a thin path to future deployment.
+> A local-first personal research assistant that ingests PDF/TXT/MD documents, extracts atomic propositions, stores them in a vector database, and answers questions with precise citations—running privately on your machine.
 
-## Quickstart (Windows)
+**Tech:** Python · Gradio · Pinecone · MIT License
 
-```bat
-:: 1) Create & activate venv
-python -m venv .venv
-.\.venv\Scripts\activate
+---
 
-:: 2) Install deps
-pip install -U pip
-pip install -r requirements.txt
+## 🔍 Quick Reference
 
-:: 3) Copy env template and edit keys
-copy .env.example .env
-notepad .env
+This prototype implements a local retrieval-augmented generation (RAG) system focused on propositions. It parses documents into paragraphs, generates atomic facts via an LLM “propositionizer,” embeds them using Sentence-Transformers, stores vectors in a Pinecone index, and delivers answers with context-rich citations. **Security:** only `.pdf`, `.txt`, and `.md` files up to **10 MB** are accepted.
 
-:: 4) Launch app
-python app.py
-```
+### Key Features
 
-OpenGradio will print a `http://127.0.0.1:7860` link in the console.
+- **📄 Document ingestion pipeline** — Parse PDFs/TXT/MD, extract propositions with an LLM, encode with Sentence-Transformers, and upsert into Pinecone.
+- **💬 Chat interface** — Gradio 5.x single-page UI with SSR and PWA support.
+- **🔍 Retrieval & answering** — Embed query, similarity search, top-k filtering, and generate an answer with citations.
+- **💸 Cost awareness** — Real-time display of LLM usage and token counts.
+- **📊 Evaluation harness** — Retrieval metrics: hit@k, nDCG, and citation span accuracy.
+- **🧠 (Optional) MoE retrieval** — Router, gate, and two-stage reranker for hybrid retrieval.
 
-## Configure
+---
 
-Set the following in `.env`:
+## 🧰 Technologies
 
-```ini
-# Core API Keys
-OPENROUTER_API_KEY=sk-...
-OPENROUTER_MODEL=openrouter/auto
-OPENROUTER_REFERER=http://localhost:7860
-OPENROUTER_TITLE=Personal RAG (Propositional)
-PINECONE_API_KEY=pcn-...
-PINECONE_INDEX=personal-rag
-PINECONE_CLOUD=aws
-PINECONE_REGION=us-east-1
+| Category            | Technology / Version Hint                    |
+|---------------------|----------------------------------------------|
+| Programming Language| Python ≥ 3.11                                |
+| UI Framework        | Gradio ≥ 5.42.0                              |
+| Vector Database     | Pinecone ≥ 7.0                               |
+| Embeddings          | Sentence-Transformers 5.x                    |
+| ML Runtime          | PyTorch ≥ 2.8                                |
+| PDF Parser          | `pypdf` ≥ 6.0                                |
+| LLM API             | OpenRouter `/chat/completions`               |
 
-# Enhanced Configuration
-EMBED_MODEL=BAAI/bge-small-en-v1.5
-NAMESPACE=default
-SENTENCE_TRANSFORMERS_BACKEND=torch  # torch/onnx/openvino
+**Live demo:** The Gradio interface runs locally at `http://localhost:7860` after starting the app.
 
-# MoE Configuration (Optional)
-MOE_ENABLED=false  # Set to true to enable Mixture of Experts
-MOE_ROUTER_ENABLED=true
-MOE_GATE_ENABLED=true
-MOE_RERANKER_ENABLED=true
-```
+---
 
-> The embedding model is **384-d**, so the Pinecone index must be created with `dimension=384`.
-> **MoE Features**: Set `MOE_ENABLED=true` to activate intelligent expert routing, adaptive retrieval, and multi-stage reranking for enhanced accuracy.
+## 🗺 Visual Architecture Overview
 
-## What’s Inside
+### High-Level System Architecture
 
-### Core Application
-- `app.py` — launches the Gradio 5.x UI with SSR (tabs: **Chat**, **Ingest**, **Configuration**, **Cost Calculator**).
-- `src/parsers.py` — PDF/TXT/MD parsing and paragraphing with enhanced security validation.
-- `src/propositionizer.py` — LLM-based extraction of **atomic propositions** (JSON via OpenRouter).
-- `src/embeddings.py` — Sentence-Transformers 5.x with multi-backend support (torch/onnx/openvino).
-- `src/vectorstore.py` — Pinecone gRPC client for improved performance and reliability.
-- `src/ingest.py` — end-to-end ingest: parse → propositionize → embed → upsert with progress tracking.
-- `src/rag.py` — Enhanced RAG with optional MoE integration for intelligent retrieval.
-- `src/config.py` — Enhanced configuration with MoE support and validation.
-
-### Mixture of Experts (MoE) Architecture
-- `src/moe/` — Complete MoE implementation directory:
-  - `config.py` — MoE configuration management with YAML support
-  - `router.py` — Expert routing with centroid management and performance tracking
-  - `gate.py` — Selective retrieval gate with adaptive k-selection
-  - `reranker.py` — Two-stage reranking (cross-encoder + LLM)
-  - `integration.py` — Orchestration layer integrating all MoE components
-- `scripts/validate_moe.py` — MoE integration validation and testing
-
-### Evaluation & Metrics
-- `src/eval/eval.py` — Advanced metrics: **hit@k**, **nDCG@k**, **citation span accuracy**.
-- `src/eval/metrics.py` — Comprehensive retrieval metrics and performance tracking.
-- `src/eval/ab_testing.py` — A/B testing framework for MoE vs baseline comparison.
-
-### Documentation & Specifications
-- `docs/specifications/` — Complete specification suite for all features
-- `docs/research/` — Research reports and implementation recommendations
-- `memory-bank/` — Project memory and decision documentation
-
-### Sample Data & Scripts
-- `data/sample/` — Sample documents for testing and demonstration
-- `scripts/` — Utility scripts for validation, testing, and maintenance
-
-## Mixture of Experts (MoE) Features
-
-The system includes a complete **Mixture of Experts** architecture that enhances retrieval accuracy through intelligent routing and multi-stage processing:
-
-### 🚀 Expert Routing
-- **Intelligent Query Analysis**: Routes queries to the most appropriate specialized experts
-- **Performance Learning**: Tracks expert performance and adjusts routing decisions
-- **Centroid Management**: Maintains expert profiles based on document characteristics
-
-### 🎯 Adaptive Retrieval Gate
-- **Query Complexity Analysis**: Assesses query complexity to determine retrieval strategy
-- **Dynamic K-Selection**: Adapts the number of retrieved documents based on confidence
-- **Score Filtering**: Applies intelligent filtering to improve result quality
-
-### 🔄 Two-Stage Reranking
-- **Cross-Encoder Reranking**: Uses advanced models for precise relevance scoring
-- **LLM-Based Reranking**: Optional second stage for complex reasoning tasks
-- **Uncertainty Detection**: Automatically determines when advanced reranking is needed
-
-### ⚙️ Configuration
-Enable MoE features by setting `MOE_ENABLED=true` in your `.env` file:
-
-```bash
-# Enable MoE
-MOE_ENABLED=true
-
-# Fine-tune components (optional)
-MOE_ROUTER_ENABLED=true
-MOE_GATE_ENABLED=true
-MOE_RERANKER_ENABLED=true
-```
-
-### 🧪 Validation
-Test your MoE integration with the provided validation script:
-
-```bash
-python scripts/validate_moe.py
-```
-
-This will verify that all MoE components are properly integrated and functioning.
-
-# Personal RAG Chatbot (Propositional) — Starter (COST defaults wired)
-
-The **Costs** tab now reads defaults from `.env` populated with values derived from your spreadsheet:
-
-- COST_MONTHLY_QS = 6000  (Medium scenario → Queries/day × 30)
-- COST_PROMPT_TOKENS = 300
-- COST_COMPLETION_TOKENS = 300
-- COST_PRICE_PER_1K = 0.000375
-- COST_BASE_FIXED = 50.0
-
-You can change these in `.env` at any time
+```mermaid
+flowchart LR
+    subgraph Ingestion
+        A[User documents (.pdf/.txt/.md)] --> B[Parsers (PDF/TXT/MD)]
+        B --> C[Paragraphs]
+        C --> D[Propositionizer (LLM)]
+        D --> E[Atomic propositions]
+        E --> F[Sentence-Transformers]
+        F --> G[Embeddings]
+        G --> H{Vector DB<br/>Pinecone index}
+    end
+    subgraph UI
+        U[Gradio Chat Interface] -->|User query| V[Embedder]
+        V -->|Query vector| H
+        H -->|Top-k vectors| W[Context Composer]
+        W --> X[LLM (OpenRouter)]
+        X -->|Answer & citations| U
+    end
+    subgraph Optional MoE Retrieval
+        R[Router] -->|Scores| G1[Gate]
+        G1 -->|k-experts| Retrieval[Retrieve Candidates]
+        Retrieval --> S[Reranker]
+        S -->|Ranked results| W
+    end
+    H -->|Store embeddings & metadata| VectorStore[(Pinecone Index)]
