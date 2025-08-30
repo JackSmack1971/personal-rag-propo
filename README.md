@@ -2,7 +2,7 @@
      Replace the path below with the final repo path you intend to use 
      (e.g., ./assets/readme-header.png). -->
 <p align="center">
-  <img src="/mnt/data/b1ed897b-8ea7-402b-8cf5-acde81882746.png" alt="Decorative header image" width="100%" />
+  <img src="assets/readme-header.png" alt="Decorative header image" width="100%" />
 </p>
 
 # Personal Propositional RAG Chatbot (Prototype)
