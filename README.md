@@ -167,15 +167,15 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-  Q[User query] --> E1[Encode query vector]
+  Q["User query"] --> E1["Encode query vector"]
   E1 --> M1[Router]
   M1 --> G1[Gate]
-  G1 --> R1[Retrieve from k experts]
+  G1 --> R1["Retrieve from k experts"]
   R1 --> RR[Reranker]
-  RR --> C1[Context Composer]
-  C1 --> G2[LLM (OpenRouter)]
-  G2 --> A1[Answer with citations]
-  M1 -->|Fallback| V1[Classic RAG]
+  RR --> C1["Context Composer"]
+  C1 --> G2["LLM (OpenRouter)"]
+  G2 --> A1["Answer with citations"]
+  M1 -->|"Fallback"| V1["Classic RAG"]
 ```
 
 ---
