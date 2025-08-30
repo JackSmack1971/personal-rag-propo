@@ -51,34 +51,34 @@ This prototype implements a local retrieval-augmented generation (RAG) system fo
 
 ### High-Level System Architecture
 
-```mermaid
 flowchart LR
-  subgraph ING[Ingestion]
-    A[User docs: PDF/TXT/MD] --> B[Parsers]
+  subgraph ING["Ingestion"]
+    A["User docs: PDF/TXT/MD"] --> B[Parsers]
     B --> C[Paragraphs]
-    C --> D[Propositionizer (LLM)]
-    D --> E[Atomic propositions]
-    E --> F[Sentence-Transformers]
+    C --> D["Propositionizer (LLM)"]
+    D --> E["Atomic propositions"]
+    E --> F["Sentence-Transformers"]
     F --> G[Embeddings]
-    G --> H{Vector DB: Pinecone}
+    G --> H{"Vector DB: Pinecone"}
   end
 
-  subgraph UI[UI]
-    U[Gradio Chat Interface] -->|User query| V[Embedder]
-    V -->|Query vector| H
-    H -->|Top-k vectors| W[Context Composer]
-    W --> X[LLM (OpenRouter)]
-    X -->|Answer + citations| U
+  subgraph UI["UI"]
+    U["Gradio Chat Interface"] -->|"User query"| V[Embedder]
+    V -->|"Query vector"| H
+    H -->|"Top-k vectors"| W["Context Composer"]
+    W --> X["LLM (OpenRouter)"]
+    X -->|"Answer + citations"| U
   end
 
-  subgraph MOE[Optional MoE Retrieval]
-    R[Router] -->|Scores| G1[Gate]
-    G1 -->|k experts| RT[Retrieve Candidates]
+  subgraph MOE["Optional MoE Retrieval"]
+    R[Router] -->|"Scores"| G1[Gate]
+    G1 -->|"k experts"| RT["Retrieve Candidates"]
     RT --> S[Reranker]
-    S -->|Ranked results| W
+    S -->|"Ranked results"| W
   end
 
-  H -->|Store embeddings + metadata| VS[(Pinecone Index)]
+  H -->|"Store embeddings + metadata"| VS[(Pinecone Index)]
+
 ```
 
 ### Core Classes & Modules
