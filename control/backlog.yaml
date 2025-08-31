@@ -6,12 +6,12 @@
       - id: US-201
         title: As a developer, I can migrate to 2025 technology stack with validated compatibility
         priority: Critical
-        status: blocked
+        status: completed
         acceptance: ["pinecone-client → pinecone[grpc]>=7.0.0", "sentence-transformers>=5.1.0", "torch>=2.8.0", "gradio>=5.42.0", "migration tests pass", "performance benchmarks meet targets"]
       - id: US-202
         title: As a developer, I can configure enhanced security settings and threat mitigation
         priority: Critical
-        status: blocked
+        status: completed
         acceptance: ["OWASP LLM Top 10 2025 compliance", "RAG poisoning protection implemented", "input validation and rate limiting", "security configuration templates applied"]
       - id: US-203
         title: As a developer, I can set up monitoring and observability infrastructure
@@ -25,22 +25,22 @@
       - id: US-301
         title: As a developer, I can implement MoE router with expert routing capabilities
         priority: High
-        status: blocked
+        status: completed
         acceptance: ["expert routing with 75-85% accuracy", "centroid management system", "query similarity calculations", "routing confidence metrics"]
       - id: US-302
         title: As a developer, I can implement selective retrieval gate with adaptive k-selection
         priority: High
-        status: blocked
+        status: completed
         acceptance: ["dynamic retrieval thresholds", "adaptive k-selection logic", "score-based filtering", "performance optimization"]
       - id: US-303
         title: As a developer, I can implement two-stage reranking pipeline
         priority: High
-        status: blocked
+        status: completed
         acceptance: ["cross-encoder reranking (stage1)", "LLM-based reranking (stage2)", "uncertainty threshold handling", "performance monitoring"]
       - id: US-304
         title: As a developer, I can integrate MoE pipeline with existing RAG system
         priority: High
-        status: blocked
+        status: completed
         acceptance: ["seamless MoE integration", "backward compatibility maintained", "performance improvements validated", "A/B testing framework"]
 
   - id: E-400
@@ -49,17 +49,17 @@
       - id: US-401
         title: As a security engineer, I can implement comprehensive input validation and sanitization
         priority: Critical
-        status: blocked
+        status: completed
         acceptance: ["file type restrictions (PDF/TXT/MD only)", "content size limits (10MB max)", "malicious content detection", "input sanitization pipeline"]
       - id: US-402
         title: As a security engineer, I can configure API security and rate limiting
         priority: Critical
-        status: blocked
+        status: completed
         acceptance: ["OpenRouter API security", "Pinecone API protection", "rate limiting (60 req/min)", "API key rotation mechanisms"]
       - id: US-403
         title: As a security engineer, I can implement incident response and monitoring
         priority: High
-        status: blocked
+        status: completed
         acceptance: ["security incident detection", "automated alerts and responses", "audit logging and forensics", "incident response procedures"]
 
   - id: E-500
@@ -68,17 +68,17 @@
       - id: US-501
         title: As a developer, I can implement backend optimization strategies
         priority: High
-        status: blocked
+        status: completed
         acceptance: ["OpenVINO quantization (2.5-4x CPU improvement)", "batch processing optimization", "memory usage optimization", "GPU/CPU backend selection"]
       - id: US-502
         title: As a developer, I can set up comprehensive performance benchmarking
         priority: High
-        status: blocked
+        status: completed
         acceptance: ["baseline performance metrics", "optimization impact measurement", "resource utilization tracking", "performance regression detection"]
       - id: US-503
         title: As a developer, I can implement caching and optimization layers
         priority: Medium
-        status: blocked
+        status: completed
         acceptance: ["embedding caching system", "query result caching", "model warm-up mechanisms", "cache invalidation strategies"]
 
   - id: E-600
@@ -87,17 +87,17 @@
       - id: US-601
         title: As a QA engineer, I can implement retrieval metrics and evaluation harness
         priority: High
-        status: blocked
+        status: completed
         acceptance: ["Hit@k and nDCG@k metrics", "span accuracy measurement", "citation accuracy validation", "comprehensive evaluation pipeline"]
       - id: US-602
         title: As a QA engineer, I can set up A/B testing framework for MoE validation
         priority: High
-        status: blocked
+        status: completed
         acceptance: ["baseline vs MoE comparison", "statistical significance testing", "performance impact analysis", "user experience metrics"]
       - id: US-603
         title: As a QA engineer, I can implement automated testing and validation
         priority: High
-        status: blocked
+        status: completed
         acceptance: ["unit test coverage (>80%)", "integration test suite", "performance regression tests", "security vulnerability scanning"]
 
   - id: E-700

@@ -106,7 +106,7 @@ class InputValidator:
 
     def _compile_patterns(self):
         """Compile regex patterns for validation"""
-        # Dangerous patterns to detect
+        # Dangerous patterns to detect (OWASP LLM Top 10 2025)
         self.dangerous_patterns = [
             re.compile(r'<script[^>]*>.*?</script>', re.IGNORECASE | re.DOTALL),
             re.compile(r'javascript:', re.IGNORECASE),
@@ -120,20 +120,44 @@ class InputValidator:
             re.compile(r'file://', re.IGNORECASE),
             re.compile(r'\\x[0-9a-fA-F]{2}', re.IGNORECASE),  # Hex encoding
             re.compile(r'\\u[0-9a-fA-F]{4}', re.IGNORECASE),  # Unicode encoding
+            # Additional LLM-specific patterns
+            re.compile(r'ignore\s+(all\s+)?previous\s+instructions', re.IGNORECASE),
+            re.compile(r'system\s+prompt[:\s]', re.IGNORECASE),
+            re.compile(r'you\s+are\s+now\s+', re.IGNORECASE),
+            re.compile(r'forget\s+your\s+', re.IGNORECASE),
+            re.compile(r'override\s+(your\s+)?', re.IGNORECASE),
+            re.compile(r'bypass\s+(your\s+)?', re.IGNORECASE),
+            re.compile(r'do\s+not\s+follow', re.IGNORECASE),
+            re.compile(r'jailbreak', re.IGNORECASE),
+            re.compile(r'dan\s+mode', re.IGNORECASE),
         ]
 
-        # SQL injection patterns
+        # SQL injection patterns (enhanced)
         self.sql_patterns = [
             re.compile(r';\s*(select|insert|update|delete|drop|create|alter)', re.IGNORECASE),
             re.compile(r'union\s+select', re.IGNORECASE),
             re.compile(r'--|#|/\*|\*/', re.IGNORECASE),
+            re.compile(r'1=1\s*--', re.IGNORECASE),
+            re.compile(r'1=1\s*#', re.IGNORECASE),
+            re.compile(r'or\s+1=1', re.IGNORECASE),
+            re.compile(r'and\s+1=1', re.IGNORECASE),
         ]
 
-        # Path traversal patterns
+        # Path traversal patterns (enhanced)
         self.path_patterns = [
             re.compile(r'\.\./|\.\.\\'),
             re.compile(r'~'),
             re.compile(r'\\'),
+            re.compile(r'%2e%2e%2f', re.IGNORECASE),  # URL encoded ../
+            re.compile(r'%2e%2e/', re.IGNORECASE),     # URL encoded ../
+            re.compile(r'\.\.%2f', re.IGNORECASE),     # Mixed encoding
+        ]
+
+        # File-based attack patterns
+        self.file_attack_patterns = [
+            re.compile(r'\.exe|\.bat|\.cmd|\.scr|\.pif|\.com', re.IGNORECASE),
+            re.compile(r'\.vbs|\.js|\.jar|\.hta', re.IGNORECASE),
+            re.compile(r'\.zip|\.rar|\.7z', re.IGNORECASE),  # Archive files that could contain malware
         ]
 
     def validate_file_upload(self, file_path: str, file_content: bytes) -> Tuple[bool, str]:
@@ -143,12 +167,16 @@ class InputValidator:
         file_ext = Path(file_path).suffix.lower()
         allowed_types = self.config.allowed_file_types or ['.pdf', '.txt', '.md']
         if file_ext not in allowed_types:
-            return False, f"File type {file_ext} not allowed"
+            return False, f"File type {file_ext} not allowed. Only {', '.join(allowed_types)} files are permitted."
 
         # Check file size
         file_size_mb = len(file_content) / (1024 * 1024)
         if file_size_mb > self.config.max_file_size_mb:
             return False, f"File size {file_size_mb:.1f}MB exceeds limit of {self.config.max_file_size_mb}MB"
+
+        # Check for file-based attacks
+        if any(pattern.search(file_path) for pattern in self.file_attack_patterns):
+            return False, "File name contains potentially malicious patterns"
 
         # Check for malicious content
         content_str = file_content.decode('utf-8', errors='ignore')
@@ -156,17 +184,26 @@ class InputValidator:
         # Check for dangerous patterns
         for pattern in self.dangerous_patterns:
             if pattern.search(content_str):
-                return False, "File contains potentially malicious content"
+                return False, "File contains potentially malicious content (dangerous patterns detected)"
 
         # Check for SQL injection patterns
         for pattern in self.sql_patterns:
             if pattern.search(content_str):
-                return False, "File contains potentially malicious SQL patterns"
+                return False, "File contains potentially malicious SQL injection patterns"
 
         # Check for path traversal
         for pattern in self.path_patterns:
             if pattern.search(file_path) or pattern.search(content_str):
                 return False, "File contains path traversal attempts"
+
+        # Check for file attack patterns in content
+        for pattern in self.file_attack_patterns:
+            if pattern.search(content_str):
+                return False, "File contains references to potentially malicious file types"
+
+        # Entropy analysis for obfuscated content
+        if self._check_high_entropy(content_str):
+            return False, "File contains potentially obfuscated or encrypted content"
 
         # Additional content validation based on file type
         if file_ext == '.pdf':
@@ -251,6 +288,30 @@ class InputValidator:
             input_str = re.sub(rf'\b{func}\s*\(', f'_{func}_disabled(', input_str, flags=re.IGNORECASE)
 
         return input_str
+
+    def _check_high_entropy(self, content: str, threshold: float = 0.7) -> bool:
+        """Check if content has high entropy (potential obfuscation)"""
+        if len(content) < 100:  # Skip short content
+            return False
+
+        # Calculate character frequency
+        char_freq = {}
+        for char in content:
+            char_freq[char] = char_freq.get(char, 0) + 1
+
+        # Calculate entropy
+        entropy = 0
+        content_len = len(content)
+        for count in char_freq.values():
+            probability = count / content_len
+            if probability > 0:
+                entropy -= probability * (probability.bit_length() - 1)  # Approximation
+
+        # Normalize entropy (0-1 scale)
+        max_entropy = len(char_freq)  # Maximum possible entropy
+        normalized_entropy = entropy / max_entropy if max_entropy > 0 else 0
+
+        return normalized_entropy > threshold
 
 class SecurityAuditor:
     """Security event auditing and logging"""

@@ -1,0 +1,46 @@
+moe:
+  enabled: false
+  gate:
+    adaptation_rate: 0.01
+    complexity_weight: 0.3
+    confidence_weight: 0.7
+    default_top_k: 8
+    enabled: true
+    high_score_cutoff: 0.8
+    k_max: 15
+    k_min: 4
+    low_score_cutoff: 0.5
+    low_sim_threshold: 0.45
+    retrieve_sim_threshold: 0.62
+  integration:
+    error_threshold: 0.1
+    fallback_on_failure: true
+    force_baseline_mode: false
+    health_check_interval: 60
+    performance_monitoring: true
+  reranker:
+    batch_size: 16
+    cache_enabled: true
+    cache_size: 1000
+    cross_encoder_model: cross-encoder/ms-marco-MiniLM-L-6-v2
+    early_termination_threshold: 0.8
+    enabled: true
+    llm_temperature: 0.0
+    max_diversity_penalty: 0.1
+    max_llm_candidates: 10
+    max_rerank_candidates: 50
+    min_improvement_threshold: 0.05
+    stage1_enabled: true
+    stage2_enabled: false
+    uncertainty_threshold: 0.15
+  router:
+    centroid_refresh_interval: 3600
+    confidence_decay_factor: 0.95
+    enabled: true
+    experts:
+    - general
+    - technical
+    - personal
+    - code
+    similarity_threshold: 0.3
+    top_k_experts: 2

@@ -498,6 +498,161 @@ with gr.Blocks(
         with gr.Row():
             base_fixed = gr.Number(
                 label="Base Fixed Cost (USD)",
+                value=float(os.getenv("COST_BASE_FIXED", "0")),
+                minimum=0
+            )
+
+        with gr.Row():
+            calc_btn = gr.Button("💰 Calculate", variant="primary", size="lg")
+
+        cost_out = gr.Textbox(
+            label="Cost Estimate",
+            lines=10,
+            show_copy_button=True,
+            interactive=False
+        )
+
+        calc_btn.click(
+            ui_costs,
+            inputs=[monthly_queries, prompt_tk, completion_tk, price_per_1k, base_fixed],
+            outputs=cost_out,
+            show_progress="minimal"
+        )
+
+# Health check endpoint for production monitoring
+def health_check():
+    """
+    Production health check endpoint for load balancers and monitoring systems.
+    """
+    try:
+        import psutil
+        import time
+
+        # Basic system health checks
+        health_status = {
+            "status": "healthy",
+            "timestamp": time.time(),
+            "version": "2.0.0",
+            "uptime": time.time() - psutil.boot_time(),
+            "services": {
+                "embedder": "healthy" if embedder is not None else "unhealthy",
+                "vectorstore": "healthy",  # Assume healthy if app started
+                "security": "healthy",  # Assume healthy if app started
+            },
+            "system": {
+                "cpu_percent": psutil.cpu_percent(interval=1),
+                "memory_percent": psutil.virtual_memory().percent,
+                "disk_percent": psutil.disk_usage('/').percent
+            }
+        }
+
+        # Check for critical issues
+        if health_status["system"]["memory_percent"] > 90:
+            health_status["status"] = "warning"
+            health_status["message"] = "High memory usage"
+
+        if health_status["system"]["cpu_percent"] > 95:
+            health_status["status"] = "warning"
+            health_status["message"] = "High CPU usage"
+
+        # Check if any services are unhealthy
+        if any(service == "unhealthy" for service in health_status["services"].values()):
+            health_status["status"] = "unhealthy"
+
+        return health_status
+
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        return {
+            "status": "unhealthy",
+            "timestamp": time.time(),
+            "error": str(e)
+        }
+
+# Enhanced application launch with health endpoint
+if __name__ == "__main__":
+    # Add health check route for production
+    import threading
+    from flask import Flask, jsonify
+
+    health_app = Flask(__name__)
+
+    @health_app.route('/health')
+    def health():
+        """Health check endpoint for load balancers and monitoring"""
+        health_data = health_check()
+        status_code = 200 if health_data["status"] in ["healthy", "warning"] else 503
+        return jsonify(health_data), status_code
+
+    @health_app.route('/metrics')
+    def metrics():
+        """Basic metrics endpoint for monitoring systems"""
+        try:
+            import psutil
+            metrics_data = {
+                "cpu_usage": psutil.cpu_percent(),
+                "memory_usage": psutil.virtual_memory().percent,
+                "disk_usage": psutil.disk_usage('/').percent,
+                "timestamp": time.time()
+            }
+            return jsonify(metrics_data)
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    # Start health check server in background thread
+    def run_health_server():
+        try:
+            # Only run health server if not in debug mode
+            if os.getenv("FLASK_ENV") != "development":
+                health_app.run(host='0.0.0.0', port=8000, debug=False, use_reloader=False)
+        except Exception as e:
+            logger.error(f"Health server failed to start: {e}")
+
+    health_thread = threading.Thread(target=run_health_server, daemon=True)
+    health_thread.start()
+
+    # Launch main Gradio application
+    try:
+        launch_kwargs = {
+            "server_name": os.getenv("GRADIO_SERVER_NAME", "0.0.0.0"),
+            "server_port": int(os.getenv("GRADIO_SERVER_PORT", 7860)),
+            "show_api": False,  # Disable API for security
+            "share": False,  # Disable public sharing for security
+            "auth": None,  # Authentication handled separately if needed
+            "favicon_path": None,
+            "ssl_verify": True,
+            "root_path": os.getenv("ROOT_PATH", ""),
+            "app_kwargs": {
+                "title": "Personal RAG Chatbot (2025 Stack)",
+                "description": "Enhanced RAG system with Mixture of Experts and advanced security"
+            }
+        }
+
+        # Add authentication if configured
+        auth_enabled = os.getenv("GRADIO_AUTH_ENABLED", "false").lower() == "true"
+        if auth_enabled:
+            def auth_function(username, password):
+                """Simple authentication function"""
+                try:
+                    expected_user = os.getenv("GRADIO_AUTH_USER", "admin")
+                    expected_pass = os.getenv("GRADIO_AUTH_PASS", "admin")
+                    return username == expected_user and password == expected_pass
+                except Exception as e:
+                    logger.error(f"Authentication error: {e}")
+                    return False
+
+            launch_kwargs["auth"] = auth_function
+            logger.info("Authentication enabled for Gradio interface")
+
+        logger.info(f"Starting Personal RAG Chatbot on {launch_kwargs['server_name']}:{launch_kwargs['server_port']}")
+        logger.info("Health check available at http://localhost:8000/health")
+        logger.info("Metrics available at http://localhost:8000/metrics")
+
+        demo.launch(**launch_kwargs)
+
+    except Exception as e:
+        logger.error(f"Failed to start application: {e}")
+        raise
                 value=float(os.getenv("COST_BASE_FIXED", "50.0")),
                 minimum=0
             )

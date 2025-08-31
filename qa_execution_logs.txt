@@ -1,261 +1,596 @@
-QA TEST EXECUTION LOGS - PERSONAL RAG CHATBOT
-Generated: 2025-08-30T11:30:15.000Z
-Execution Environment: Windows 11, Python 3.11, 16GB RAM, Intel i7
+QA Test Execution Results - 2025-08-30T17:54:45.842526
+============================================================
 
-===============================================================================
-SYSTEM INFORMATION
-===============================================================================
-Platform: Windows-11-10.0.22631-SP0
-Python Version: 3.11.0
-CPU Cores: 8
-Memory Available: 12.5 GB
-Test Execution Start: 2025-08-30T11:30:15.000Z
+SYSTEM INFORMATION:
+{
+  "platform": "Windows-11-10.0.22631-SP0",
+  "python_version": "3.13.4 (tags/v3.13.4:8a526ec, Jun  3 2025, 17:46:04) [MSC v.1943 64 bit (AMD64)]",
+  "cpu_count": 8,
+  "memory_total_gb": 7.411502838134766,
+  "memory_available_gb": 1.1513557434082031,
+  "disk_free_gb": 8.363407135009766
+}
 
-===============================================================================
-DEPENDENCY ANALYSIS
-===============================================================================
-✅ numpy (1.24.3) - Available
-✅ torch (2.8.0) - Available
-✅ sentence_transformers (5.1.0) - Available
-❌ gradio - MISSING (would cause UI tests to fail)
-❌ pinecone - MISSING (would cause vector store tests to fail)
-❌ pypdf - MISSING (would cause document processing tests to fail)
-❌ psutil - MISSING (would cause performance monitoring to fail)
+DEPENDENCY CHECK:
+Missing dependencies: sentence_transformers, python_dotenv
 
-===============================================================================
-TEST EXECUTION RESULTS
-===============================================================================
+TEST RESULTS SUMMARY:
+Total tests run: 6
+Successful tests: 0
+Failed tests: 6
+.2f
 
---- TEST SUITE: Acceptance Tests ---
-Started: 2025-08-30T11:30:20.000Z
+DETAILED TEST RESULTS:
+
+--- Acceptance Tests ---
 File: tests/test_acceptance.py
-Status: ❌ FAILED
-Duration: 45.23 seconds
-Return Code: 1
-
+Duration: 11.97s
+Success: False
 STDOUT:
-Running tests...
-test_document_ingestion (test_acceptance.TestFunctionalRequirements) ... FAIL
-test_question_answering (test_acceptance.TestFunctionalRequirements) ... FAIL
-test_citation_accuracy (test_acceptance.TestFunctionalRequirements) ... FAIL
-test_ui_functionality (test_acceptance.TestFunctionalRequirements) ... FAIL
+
+============================================================
+Acceptance Test Summary
+============================================================
 
 STDERR:
-ImportError: No module named 'moe' - MoE package not properly installed
-AttributeError: 'NoneType' object has no attribute 'process_query' - Pipeline initialization failed
-ModuleNotFoundError: No module named 'gradio' - UI framework missing
-ConnectionError: Failed to connect to Pinecone - API key not configured
+test_accuracy_requirements (__main__.TestBusinessRequirements.test_accuracy_requirements)
+Test answer accuracy requirements ... FAIL
+test_citation_requirements (__main__.TestBusinessRequirements.test_citation_requirements)
+Test citation requirements ... ok
+test_scalability_requirements (__main__.TestBusinessRequirements.test_scalability_requirements)
+Test scalability requirements ... ok
+test_citation_accuracy (__main__.TestFunctionalRequirements.test_citation_accuracy)
+Test citation accuracy in answers ... ok
+test_document_ingestion (__main__.TestFunctionalRequirements.test_document_ingestion)
+Test document ingestion functionality ... ERROR
+test_question_answering (__main__.TestFunctionalRequirements.test_question_answering)
+Test question answering functionality ... ok
+test_ui_functionality (__main__.TestFunctionalRequirements.test_ui_functionality)
+Test UI functionality (mocked) ... C:\Users\click\AppData\Roaming\Python\Python313\site-packages\websockets\legacy\__init__.py:6: DeprecationWarning: websockets.legacy is deprecated; see https://websockets.readthedocs.io/en/stable/howto/upgrade.html for upgrade instructions
+  warnings.warn(  # deprecated in 14.0 - 2024-11-09
+ok
+test_api_integration_readiness (__main__.TestIntegrationRequirements.test_api_integration_readiness)
+Test readiness for API integration ... ok
+test_configuration_management (__main__.TestIntegrationRequirements.test_configuration_management)
+Test configuration management ... ok
+test_monitoring_readiness (__main__.TestIntegrationRequirements.test_monitoring_readiness)
+Test monitoring and observability readiness ... ok
+test_concurrent_users (__main__.TestPerformanceRequirements.test_concurrent_users)
+Test support for concurrent users ... ok
+test_memory_usage (__main__.TestPerformanceRequirements.test_memory_usage)
+Test memory usage requirements ... ok
+test_query_response_time (__main__.TestPerformanceRequirements.test_query_response_time)
+Test query response time requirements ... ok
+test_system_stability (__main__.TestPerformanceRequirements.test_system_stability)
+Test system stability under load ... ok
+test_error_messages (__main__.TestUserExperience.test_error_messages)
+Test user-friendly error messages ... ok
+test_helpful_responses (__main__.TestUserExperience.test_helpful_responses)
+Test that responses are helpful and informative ... ok
+test_response_consistency (__main__.TestUserExperience.test_response_consistency)
+Test response consistency for similar queries ... FAIL
 
---- TEST SUITE: MoE Component Tests ---
-Started: 2025-08-30T11:31:05.000Z
+======================================================================
+ERROR: test_document_ingestion (__main__.TestFunctionalRequirements.test_document_ingestion)
+Test document ingestion functionality
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_acceptance.py", line 38, in test_document_ingestion
+    from src.ingest import ingest_files
+ModuleNotFoundError: No module named 'src'
+
+======================================================================
+FAIL: test_accuracy_requirements (__main__.TestBusinessRequirements.test_accuracy_requirements)
+Test answer accuracy requirements
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_acceptance.py", line 341, in test_accuracy_requirements
+    self.assertIsNotNone(result.final_answer)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_response_consistency (__main__.TestUserExperience.test_response_consistency)
+Test response consistency for similar queries
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_acceptance.py", line 309, in test_response_consistency
+    self.assertIsNotNone(response)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+AssertionError: unexpectedly None
+
+----------------------------------------------------------------------
+Ran 17 tests in 10.432s
+
+FAILED (failures=2, errors=1)
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_acceptance.py", line 449, in <module>
+    print("\u2705 Acceptance tests completed")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+
+
+--- MoE Component Unit Tests ---
 File: tests/test_moe_components.py
-Status: ❌ FAILED
-Duration: 12.45 seconds
-Return Code: 1
-
+Duration: 8.37s
+Success: False
 STDOUT:
-Running tests...
-test_default_config_creation (test_moe_components.TestMoEConfiguration) ... FAIL
-test_router_initialization (test_moe_components.TestExpertRouter) ... FAIL
+
+============================================================
+MoE Component Unit Test Summary
+============================================================
 
 STDERR:
-ImportError: cannot import name 'MoEConfig' from 'moe' - MoE classes not defined
-ImportError: cannot import name 'ExpertRouter' from 'moe' - Router class missing
-AttributeError: 'NoneType' object has no attribute 'route_query' - Router not initialized
-TypeError: unsupported operand type(s) for +: 'NoneType' and 'str' - Type annotation issues
+test_centroid_updates (__main__.TestExpertRouter.test_centroid_updates)
+Test centroid updates ... FAIL
+test_performance_tracking (__main__.TestExpertRouter.test_performance_tracking)
+Test performance metrics tracking ... FAIL
+test_router_initialization (__main__.TestExpertRouter.test_router_initialization)
+Test router initialization ... ok
+test_routing_statistics (__main__.TestExpertRouter.test_routing_statistics)
+Test routing statistics generation ... ok
+test_routing_with_centroids (__main__.TestExpertRouter.test_routing_with_centroids)
+Test routing with centroids available ... FAIL
+test_routing_without_centroids (__main__.TestExpertRouter.test_routing_without_centroids)
+Test routing when no centroids are available ... ok
+test_component_disablement (__main__.TestIntegrationScenarios.test_component_disablement)
+Test behavior when components are disabled ... ok
+test_configuration_persistence (__main__.TestIntegrationScenarios.test_configuration_persistence)
+Test configuration persistence ... ok
+test_error_handling (__main__.TestIntegrationScenarios.test_error_handling)
+Test error handling in components ... FAIL
+test_component_enablement (__main__.TestMoEConfiguration.test_component_enablement)
+Test component enablement checking ... FAIL
+test_config_updates (__main__.TestMoEConfiguration.test_config_updates)
+Test configuration updates ... ok
+test_config_validation (__main__.TestMoEConfiguration.test_config_validation)
+Test configuration validation ... ok
+test_default_config_creation (__main__.TestMoEConfiguration.test_default_config_creation)
+Test creating default MoE configuration ... FAIL
+test_pipeline_initialization (__main__.TestMoEPipeline.test_pipeline_initialization)
+Test pipeline initialization ... FAIL
+test_pipeline_processing_mock (__main__.TestMoEPipeline.test_pipeline_processing_mock)
+Test pipeline processing with mocks ... ok
+test_complexity_calculation (__main__.TestSelectiveGate.test_complexity_calculation)
+Test query complexity calculation ... ok
+test_gate_decision_retrieval (__main__.TestSelectiveGate.test_gate_decision_retrieval)
+Test gate decision for retrieval ... ok
+test_gate_initialization (__main__.TestSelectiveGate.test_gate_initialization)
+Test gate initialization ... ok
+test_gate_statistics (__main__.TestSelectiveGate.test_gate_statistics)
+Test gate statistics ... ok
+test_score_filtering (__main__.TestSelectiveGate.test_score_filtering)
+Test score-based filtering ... ok
+test_cache_clearing (__main__.TestTwoStageReranker.test_cache_clearing)
+Test cache clearing ... ok
+test_cache_functionality (__main__.TestTwoStageReranker.test_cache_functionality)
+Test caching functionality ... ok
+test_reranker_initialization (__main__.TestTwoStageReranker.test_reranker_initialization)
+Test reranker initialization ... ok
+test_reranking_pipeline (__main__.TestTwoStageReranker.test_reranking_pipeline)
+Test complete reranking pipeline ... ok
+test_uncertainty_calculation (__main__.TestTwoStageReranker.test_uncertainty_calculation)
+Test uncertainty calculation ... ok
 
---- TEST SUITE: MoE Integration Tests ---
-Started: 2025-08-30T11:31:17.000Z
+======================================================================
+FAIL: test_centroid_updates (__main__.TestExpertRouter.test_centroid_updates)
+Test centroid updates
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_components.py", line 119, in test_centroid_updates
+    self.assertEqual(len(self.router.centroids), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_performance_tracking (__main__.TestExpertRouter.test_performance_tracking)
+Test performance metrics tracking
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_components.py", line 166, in test_performance_tracking
+    self.assertAlmostEqual(self.router.performance[expert_id].avg_response_time, 1.5)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0.15000000000000002 != 1.5 within 7 places (1.35 difference)
+
+======================================================================
+FAIL: test_routing_with_centroids (__main__.TestExpertRouter.test_routing_with_centroids)
+Test routing with centroids available
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_components.py", line 147, in test_routing_with_centroids
+    self.assertIn("personal", decision.chosen_experts)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'personal' not found in ['general', 'technical']
+
+======================================================================
+FAIL: test_error_handling (__main__.TestIntegrationScenarios.test_error_handling)
+Test error handling in components
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_components.py", line 367, in test_error_handling
+    with self.assertRaises((AttributeError, TypeError)):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'AttributeError'>, <class 'TypeError'>) not raised
+
+======================================================================
+FAIL: test_component_enablement (__main__.TestMoEConfiguration.test_component_enablement)
+Test component enablement checking
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_components.py", line 73, in test_component_enablement
+    self.assertTrue(config.is_component_enabled("router"))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_default_config_creation (__main__.TestMoEConfiguration.test_default_config_creation)
+Test creating default MoE configuration
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_components.py", line 37, in test_default_config_creation
+    self.assertTrue(config.enabled)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_pipeline_initialization (__main__.TestMoEPipeline.test_pipeline_initialization)
+Test pipeline initialization
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Python313\Lib\unittest\mock.py", line 1426, in patched
+    return func(*newargs, **newkeywargs)
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_components.py", line 337, in test_pipeline_initialization
+    mock_router.assert_called_once()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\unittest\mock.py", line 958, in assert_called_once
+    raise AssertionError(msg)
+AssertionError: Expected 'get_expert_router' to have been called once. Called 0 times.
+
+----------------------------------------------------------------------
+Ran 25 tests in 6.918s
+
+FAILED (failures=7)
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_components.py", line 401, in <module>
+    print("\u2705 All unit tests completed")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+
+
+--- MoE Integration Tests ---
 File: tests/test_moe_integration.py
-Status: ❌ FAILED
-Duration: 8.92 seconds
-Return Code: 1
-
+Duration: 0.68s
+Success: False
 STDOUT:
-Running tests...
-test_moe_pipeline_integration (test_moe_integration.TestMoEPipelineIntegration) ... FAIL
+
+============================================================
+MoE Integration Test Summary
+============================================================
 
 STDERR:
-ImportError: No module named 'moe.integration' - Integration module missing
-AttributeError: module 'moe' has no attribute 'get_moe_pipeline' - Pipeline factory missing
-TypeError: Expected class but received function for callable parameters
+test_gate_reranker_interaction (__main__.TestComponentInteraction.test_gate_reranker_interaction)
+Test interaction between gate and reranker components ... FAIL
+test_router_gate_interaction (__main__.TestComponentInteraction.test_router_gate_interaction)
+Test interaction between router and gate components ... FAIL
+test_data_transformation (__main__.TestDataFlow.test_data_transformation)
+Test data transformation through pipeline stages ... ok
+test_pipeline_result_structure (__main__.TestDataFlow.test_pipeline_result_structure)
+Test pipeline result data structure ... ok
+test_end_to_end_pipeline_mock (__main__.TestMoEPipelineIntegration.test_end_to_end_pipeline_mock)
+Test end-to-end pipeline with comprehensive mocking ... MoE pipeline failed: 'Mock' object is not iterable
+FAIL
+test_pipeline_caching (__main__.TestMoEPipelineIntegration.test_pipeline_caching)
+Test pipeline caching functionality ... ok
+test_pipeline_creation (__main__.TestMoEPipelineIntegration.test_pipeline_creation)
+Test pipeline creation with mocked components ... FAIL
+test_pipeline_error_handling (__main__.TestMoEPipelineIntegration.test_pipeline_error_handling)
+Test pipeline error handling ... ok
+test_pipeline_statistics (__main__.TestMoEPipelineIntegration.test_pipeline_statistics)
+Test pipeline statistics collection ... FAIL
+test_pipeline_with_disabled_components (__main__.TestMoEPipelineIntegration.test_pipeline_with_disabled_components)
+Test pipeline with some components disabled ... ok
+test_concurrent_processing (__main__.TestPerformanceIntegration.test_concurrent_processing)
+Test concurrent query processing ... ok
+test_memory_usage (__main__.TestPerformanceIntegration.test_memory_usage)
+Test memory usage patterns ... ok
+test_pipeline_performance_tracking (__main__.TestPerformanceIntegration.test_pipeline_performance_tracking)
+Test that pipeline tracks performance metrics ... FAIL
 
---- TEST SUITE: Performance Benchmarking ---
-Started: 2025-08-30T11:31:26.000Z
+======================================================================
+FAIL: test_gate_reranker_interaction (__main__.TestComponentInteraction.test_gate_reranker_interaction)
+Test interaction between gate and reranker components
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Python313\Lib\unittest\mock.py", line 1426, in patched
+    return func(*newargs, **newkeywargs)
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_integration.py", line 273, in test_gate_reranker_interaction
+    mock_reranker_instance.rerank.assert_called_once()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\unittest\mock.py", line 958, in assert_called_once
+    raise AssertionError(msg)
+AssertionError: Expected 'rerank' to have been called once. Called 0 times.
+
+======================================================================
+FAIL: test_router_gate_interaction (__main__.TestComponentInteraction.test_router_gate_interaction)
+Test interaction between router and gate components
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Python313\Lib\unittest\mock.py", line 1426, in patched
+    return func(*newargs, **newkeywargs)
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_integration.py", line 232, in test_router_gate_interaction
+    mock_router_instance.route_query.assert_called_once()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\unittest\mock.py", line 958, in assert_called_once
+    raise AssertionError(msg)
+AssertionError: Expected 'route_query' to have been called once. Called 0 times.
+
+======================================================================
+FAIL: test_end_to_end_pipeline_mock (__main__.TestMoEPipelineIntegration.test_end_to_end_pipeline_mock)
+Test end-to-end pipeline with comprehensive mocking
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Python313\Lib\unittest\mock.py", line 1426, in patched
+    return func(*newargs, **newkeywargs)
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_integration.py", line 140, in test_end_to_end_pipeline_mock
+    self.assertIsNotNone(result.routing_decision)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+======================================================================
+FAIL: test_pipeline_creation (__main__.TestMoEPipelineIntegration.test_pipeline_creation)
+Test pipeline creation with mocked components
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Python313\Lib\unittest\mock.py", line 1426, in patched
+    return func(*newargs, **newkeywargs)
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_integration.py", line 55, in test_pipeline_creation
+    mock_router.assert_called_once()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Python313\Lib\unittest\mock.py", line 958, in assert_called_once
+    raise AssertionError(msg)
+AssertionError: Expected 'get_expert_router' to have been called once. Called 0 times.
+
+======================================================================
+FAIL: test_pipeline_statistics (__main__.TestMoEPipelineIntegration.test_pipeline_statistics)
+Test pipeline statistics collection
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_integration.py", line 194, in test_pipeline_statistics
+    self.assertEqual(stats["total_queries"], 3)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 5 != 3
+
+======================================================================
+FAIL: test_pipeline_performance_tracking (__main__.TestPerformanceIntegration.test_pipeline_performance_tracking)
+Test that pipeline tracks performance metrics
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_integration.py", line 351, in test_pipeline_performance_tracking
+    self.assertEqual(stats["total_queries"], 5)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 17 != 5
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.078s
+
+FAILED (failures=6)
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_moe_integration.py", line 416, in <module>
+    print("\u2705 Integration tests completed")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+
+
+--- Performance Benchmarking Tests ---
 File: tests/test_performance_benchmarking.py
-Status: ❌ FAILED
-Duration: 156.78 seconds
-Return Code: 1
-
+Duration: 2.62s
+Success: False
 STDOUT:
-Running performance benchmarks...
-Memory benchmark: 45.2 MB increase detected
-Query response time: Average 2.3s (target <2.0s)
+Performance Regression: 0.38x (baseline: 0.000s, current: 0.000s)
+Cold Start Latency: 0.000s
+Component Latency Breakdown: 2 components measured
+Query Latency Benchmark: 0.000s average
+Cache Memory Usage: 0.0MB
+Memory Leak Test: Total increase 0.1MB after 50 queries
+Memory Usage: 39.5MB -> 39.5MB (+0.0MB)
+CPU Utilization: 0.6% during processing
+Disk I/O: 0.0MB total
+Concurrent User Scaling: Tested with 10 concurrent users
+Query Complexity Scaling: 0.57x scaling factor
+Burst Throughput: 32665.92 queries/second
+Concurrent Throughput: 20767.99 queries/second (50 queries in 0.00s)
+Single Thread Throughput: 32742.42 queries/second
+
+============================================================
+Performance Benchmarking Summary
+============================================================
 
 STDERR:
-ModuleNotFoundError: No module named 'psutil' - System monitoring unavailable
-ImportError: cannot import name 'threading' - Threading module import failed
-AttributeError: 'NoneType' object has no attribute 'memory_info' - Process monitoring failed
+test_performance_regression_detection (__main__.TestBenchmarkReporting.test_performance_regression_detection)
+Test detection of performance regressions ... ok
+test_cold_start_latency (__main__.TestLatencyBenchmarks.test_cold_start_latency)
+Benchmark cold start latency ... ok
+test_component_latency_breakdown (__main__.TestLatencyBenchmarks.test_component_latency_breakdown)
+Benchmark individual component latencies ... ok
+test_query_latency (__main__.TestLatencyBenchmarks.test_query_latency)
+Benchmark query processing latency ... ok
+test_cache_memory_usage (__main__.TestMemoryBenchmarks.test_cache_memory_usage)
+Test memory usage with caching ... ok
+test_memory_leak_detection (__main__.TestMemoryBenchmarks.test_memory_leak_detection)
+Test for memory leaks ... ok
+test_memory_usage_baseline (__main__.TestMemoryBenchmarks.test_memory_usage_baseline)
+Benchmark baseline memory usage ... ok
+test_cpu_utilization (__main__.TestResourceUtilization.test_cpu_utilization)
+Test CPU utilization during processing ... ok
+test_disk_io_patterns (__main__.TestResourceUtilization.test_disk_io_patterns)
+Test disk I/O patterns ... ok
+test_concurrent_user_scalability (__main__.TestScalabilityBenchmarks.test_concurrent_user_scalability)
+Test scalability with increasing concurrent users ... ok
+test_query_complexity_scalability (__main__.TestScalabilityBenchmarks.test_query_complexity_scalability)
+Test performance with varying query complexity ... ok
+test_burst_throughput (__main__.TestThroughputBenchmarks.test_burst_throughput)
+Benchmark burst request handling ... ok
+test_concurrent_throughput (__main__.TestThroughputBenchmarks.test_concurrent_throughput)
+Benchmark concurrent throughput ... ok
+test_single_thread_throughput (__main__.TestThroughputBenchmarks.test_single_thread_throughput)
+Benchmark single-thread throughput ... ok
 
---- TEST SUITE: Security Validation ---
-Started: 2025-08-30T11:34:03.000Z
+----------------------------------------------------------------------
+Ran 14 tests in 2.019s
+
+OK
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_performance_benchmarking.py", line 603, in <module>
+    print("\u2705 Performance benchmarks completed")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+
+
+--- Security Validation Tests ---
 File: tests/test_security_validation.py
-Status: ❌ FAILED
-Duration: 23.67 seconds
-Return Code: 1
-
+Duration: 0.65s
+Success: False
 STDOUT:
-Running security validation...
-Found 3 potential security issues
+
+============================================================
+Security Validation Test Summary
+============================================================
 
 STDERR:
-FileNotFoundError: [Errno 2] No such file or directory: '.env' - Environment file missing
-AttributeError: 'NoneType' object has no attribute 'get' - Configuration object None
-UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff - File encoding issues
+test_concurrent_access_control (__main__.TestAccessControl.test_concurrent_access_control)
+Test concurrent access control ... ok
+test_file_access_restrictions (__main__.TestAccessControl.test_file_access_restrictions)
+Test file access restrictions ... ok
+test_rate_limiting (__main__.TestAccessControl.test_rate_limiting)
+Test rate limiting functionality ... ok
+test_memory_cleanup (__main__.TestDataProtection.test_memory_cleanup)
+Test memory cleanup and leak prevention ... ok
+test_sensitive_data_masking (__main__.TestDataProtection.test_sensitive_data_masking)
+Test that sensitive data is masked in logs ... ok
+test_temporary_file_cleanup (__main__.TestDataProtection.test_temporary_file_cleanup)
+Test cleanup of temporary files ... ok
+test_error_message_sanitization (__main__.TestErrorHandling.test_error_message_sanitization)
+Test that error messages don't expose sensitive information ... MoE pipeline failed: 'NoneType' object has no attribute 'encode'
+ok
+test_graceful_degradation (__main__.TestErrorHandling.test_graceful_degradation)
+Test graceful degradation under error conditions ... ok
+test_resource_exhaustion_protection (__main__.TestErrorHandling.test_resource_exhaustion_protection)
+Test protection against resource exhaustion ... ok
+test_stack_trace_exposure (__main__.TestErrorHandling.test_stack_trace_exposure)
+Test that stack traces are not exposed to users ... ok
+test_embedding_validation (__main__.TestInputValidation.test_embedding_validation)
+Test embedding input validation ... ok
+test_file_size_validation (__main__.TestInputValidation.test_file_size_validation)
+Test file size validation ... ok
+test_file_type_validation (__main__.TestInputValidation.test_file_type_validation)
+Test file type validation in ingestion ... ERROR
+test_metadata_validation (__main__.TestInputValidation.test_metadata_validation)
+Test metadata validation in matches ... ok
+test_query_input_validation (__main__.TestInputValidation.test_query_input_validation)
+Test query input validation ... ok
+test_api_key_handling (__main__.TestSecureConfiguration.test_api_key_handling)
+Test API key secure handling ... ok
+test_configuration_file_permissions (__main__.TestSecureConfiguration.test_configuration_file_permissions)
+Test configuration file permissions ... FAIL
+test_environment_variable_security (__main__.TestSecureConfiguration.test_environment_variable_security)
+Test environment variable handling ... ERROR
+test_secure_defaults (__main__.TestSecureConfiguration.test_secure_defaults)
+Test secure default configurations ... FAIL
 
---- TEST SUITE: MoE Validation ---
-Started: 2025-08-30T11:34:27.000Z
+======================================================================
+ERROR: test_file_type_validation (__main__.TestInputValidation.test_file_type_validation)
+Test file type validation in ingestion
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_security_validation.py", line 36, in test_file_type_validation
+    from src.ingest import ingest_files
+ModuleNotFoundError: No module named 'src'
+
+======================================================================
+ERROR: test_environment_variable_security (__main__.TestSecureConfiguration.test_environment_variable_security)
+Test environment variable handling
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_security_validation.py", line 181, in test_environment_variable_security
+    self.assertIsNotNone(config.OPENROUTER_API_KEY)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MoEConfig' object has no attribute 'OPENROUTER_API_KEY'
+
+======================================================================
+FAIL: test_configuration_file_permissions (__main__.TestSecureConfiguration.test_configuration_file_permissions)
+Test configuration file permissions
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_security_validation.py", line 204, in test_configuration_file_permissions
+    self.assertEqual(file_stat.st_mode & 0o777, 0o600)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 438 != 384
+
+======================================================================
+FAIL: test_secure_defaults (__main__.TestSecureConfiguration.test_secure_defaults)
+Test secure default configurations
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_security_validation.py", line 214, in test_secure_defaults
+    self.assertTrue(config.enabled)  # Should be enabled by default for functionality
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.064s
+
+FAILED (failures=2, errors=2)
+Traceback (most recent call last):
+  File "C:\Users\click\OneDrive\Documents\personal-rag-propo\tests\test_security_validation.py", line 469, in <module>
+    print("\u2705 Security tests completed")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
+
+
+--- MoE Validation ---
 File: scripts/validate_moe.py
-Status: ❌ FAILED
-Duration: 5.23 seconds
-Return Code: 1
-
-STDOUT:
-Starting MoE Validation Tests
-Testing MoE component imports...
-
+Duration: 0.56s
+Success: False
 STDERR:
-ImportError: No module named 'moe' - Complete MoE package missing
-ModuleNotFoundError: No module named 'moe.config' - Config module not found
-AttributeError: module 'moe' has no attribute 'MoEConfig' - Classes not exported
+2025-08-30 17:54:45,322 - INFO - \U0001f680 Starting MoE Integration Validation
+2025-08-30 17:54:45,323 - INFO - ==================================================
+2025-08-30 17:54:45,323 - INFO - 
+\U0001f50d Running MoE Imports test...
+2025-08-30 17:54:45,559 - INFO - \u2705 All MoE components imported successfully
+2025-08-30 17:54:45,559 - INFO - 
+\U0001f50d Running MoE Configuration test...
+2025-08-30 17:54:45,565 - INFO - Loaded MoE configuration from config.yaml
+2025-08-30 17:54:45,566 - INFO - \u2705 MoE config loaded: enabled=False
+2025-08-30 17:54:45,566 - INFO - 
+\U0001f50d Running RAG Integration test...
+2025-08-30 17:54:45,714 - ERROR - \u274c RAG integration test failed: attempted relative import with no known parent package
+2025-08-30 17:54:45,714 - INFO - 
+\U0001f50d Running MoE Pipeline test...
+2025-08-30 17:54:45,714 - INFO - \u23f3 MoE disabled, skipping pipeline test
+2025-08-30 17:54:45,714 - INFO - 
+==================================================
+2025-08-30 17:54:45,714 - INFO - \U0001f4ca VALIDATION SUMMARY
+2025-08-30 17:54:45,714 - INFO - ==================================================
+2025-08-30 17:54:45,714 - INFO - \u2705 PASSED - MoE Imports
+2025-08-30 17:54:45,714 - INFO - \u2705 PASSED - MoE Configuration
+2025-08-30 17:54:45,714 - INFO - \u274c FAILED - RAG Integration
+2025-08-30 17:54:45,714 - INFO - \u2705 PASSED - MoE Pipeline
+2025-08-30 17:54:45,714 - INFO - --------------------------------------------------
+2025-08-30 17:54:45,714 - INFO - Overall: 3/4 tests passed
+2025-08-30 17:54:45,714 - ERROR - \u26a0\ufe0f  1 test(s) failed
 
-===============================================================================
-PERFORMANCE METRICS
-===============================================================================
-Total Test Execution Time: 4 minutes 32 seconds
-Peak Memory Usage: 487 MB
-CPU Utilization: Average 45%
-Disk I/O: 234 MB read, 89 MB written
-
-===============================================================================
-CODE COVERAGE ANALYSIS
-===============================================================================
-Lines of Code Analyzed: 2,847
-Test Coverage: 23.4%
-- Core Application: 45.2% coverage
-- MoE Components: 0% coverage (not implemented)
-- Test Infrastructure: 78.9% coverage
-- Configuration: 12.3% coverage
-
-===============================================================================
-SECURITY SCAN RESULTS
-===============================================================================
-Critical Issues Found: 2
-High Severity Issues: 5
-Medium Severity Issues: 8
-Low Severity Issues: 12
-
-Critical Issues:
-1. Missing API key validation in configuration
-2. No input sanitization for file uploads
-
-High Severity Issues:
-1. Use of eval() in source code (src/utils/helpers.py:45)
-2. Hardcoded credentials in test files
-3. Missing HTTPS enforcement
-4. SQL injection vulnerabilities in query building
-5. Command injection in subprocess calls
-
-===============================================================================
-MANUAL TESTING VALIDATION
-===============================================================================
-
-Manual Test 1: Application Startup
-- Action: Attempted to start application with 'python app.py'
-- Result: ❌ Failed with ImportError: No module named 'gradio'
-- Duration: 3.2 seconds
-- Evidence: Application cannot start without UI dependencies
-
-Manual Test 2: Configuration Loading
-- Action: Attempted to load configuration from config files
-- Result: ❌ Failed with AttributeError: 'NoneType' object has no attribute 'get'
-- Duration: 1.8 seconds
-- Evidence: Configuration system not properly implemented
-
-Manual Test 3: Document Processing
-- Action: Attempted to process sample PDF file
-- Result: ❌ Failed with ModuleNotFoundError: No module named 'pypdf'
-- Duration: 2.1 seconds
-- Evidence: Document processing dependencies missing
-
-Manual Test 4: Vector Store Connection
-- Action: Attempted to connect to Pinecone vector store
-- Result: ❌ Failed with ConnectionError: API key not configured
-- Duration: 5.4 seconds
-- Evidence: Vector store not configured for testing
-
-===============================================================================
-TEST SUMMARY
-===============================================================================
-Total Test Suites: 6
-Successful Tests: 0
-Failed Tests: 6
-Success Rate: 0%
-
-Primary Failure Categories:
-1. Missing Dependencies (60% of failures)
-2. Incomplete Implementation (25% of failures)
-3. Configuration Issues (10% of failures)
-4. Type Annotation Errors (5% of failures)
-
-===============================================================================
-RECOMMENDATIONS
-===============================================================================
-
-IMMEDIATE ACTIONS REQUIRED:
-1. Install missing dependencies from requirements-2025.txt
-2. Complete MoE implementation (router, gate, reranker components)
-3. Fix type annotation errors in integration module
-4. Configure environment variables and API keys
-5. Implement proper error handling and logging
-
-MEDIUM-TERM IMPROVEMENTS:
-1. Add comprehensive unit test coverage (>80%)
-2. Implement automated CI/CD pipeline
-3. Add performance regression testing
-4. Implement security scanning in CI pipeline
-5. Add integration tests with real services
-
-LONG-TERM ENHANCEMENTS:
-1. Implement chaos engineering tests
-2. Add load testing with realistic user patterns
-3. Implement A/B testing framework
-4. Add automated deployment validation
-5. Implement production monitoring integration
-
-===============================================================================
-CONCLUSION
-===============================================================================
-The QA testing has revealed significant gaps in the current implementation:
-
-1. The MoE architecture is not fully implemented
-2. Critical dependencies are missing
-3. Security vulnerabilities exist in the codebase
-4. Configuration management is incomplete
-5. Test infrastructure needs significant improvement
-
-PRODUCTION READINESS: NOT READY
-The system requires substantial development work before production deployment.
-
-Next Steps:
-1. Complete the MoE implementation
-2. Install all required dependencies
-3. Fix security vulnerabilities
-4. Implement comprehensive testing
-5. Re-run QA validation
-
-===============================================================================
-END OF QA EXECUTION LOGS
-Generated: 2025-08-30T11:34:32.000Z
-Total Execution Time: 4 minutes 17 seconds
-===============================================================================

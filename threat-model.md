@@ -1,28 +1,30 @@
-# Personal RAG Chatbot Threat Model
+# Threat Model for Personal RAG Chatbot
 
 ## Document Information
-- **Document ID:** THREAT-MODEL-001
+- **Document ID:** TM-SEC-001
 - **Version:** 1.0.0
 - **Created:** 2025-08-30
 - **Last Updated:** 2025-08-30
-- **Status:** Final
-- **Classification:** Internal Use Only
+- **Status:** Active
+- **Classification:** Internal
 
 ## Executive Summary
 
-This threat model provides a comprehensive security analysis of the Personal RAG Chatbot system, identifying potential threats, assessing risks, and outlining mitigation strategies. The system operates as a local-first retrieval-augmented chatbot that processes personal documents and integrates with external AI services.
-
-**Key Findings:**
-- **2 Critical Risks**: API key exposure and local environment compromise
-- **3 High Risks**: LLM prompt injection, network interception, and unauthorized access
-- **5 Medium Risks**: Model poisoning, resource exhaustion, and information leakage
-- **Overall Risk Level**: High - Requires immediate attention to critical and high-risk items
+This document presents a comprehensive threat model for the Personal RAG Chatbot system, identifying potential security risks, attack vectors, and mitigation strategies. The analysis covers the local-first architecture, external API integrations, file processing pipeline, and MoE components.
 
 ## 1. System Overview
 
-### 1.1 Architecture Description
+### 1.1 Architecture Context
 
-The Personal RAG Chatbot consists of the following core components:
+The Personal RAG Chatbot operates as a local-first application with the following key components:
+
+- **Local Processing**: Document ingestion, embedding generation, and proposition extraction
+- **External APIs**: OpenRouter (LLM), Pinecone (vector database)
+- **File Processing**: PDF/TXT/MD document parsing
+- **User Interface**: Gradio-based web interface
+- **MoE Components**: Expert routing, selective gating, and reranking (optional)
+
+### 1.2 Trust Boundaries
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -32,395 +34,421 @@ The Personal RAG Chatbot consists of the following core components:
 │  │  ┌─────────────┬─────────────┬─────────────────────┐   │ │
 │  │  │ Local       │ External    │ File System         │   │ │
 │  │  │ Processing  │ APIs        │ Access              │   │ │
-│  │  │ (Embeddings,│ (OpenRouter,│ (Document Storage)  │   │ │
-│  │  │  RAG Logic) │  Pinecone)  │                     │   │ │
 │  │  └─────────────┴─────────────┴─────────────────────┘   │ │
 │  └─────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 1.2 Data Flow Analysis
+## 2. Threat Model Methodology
 
-#### Primary Data Flows:
-1. **Document Ingestion**: User uploads → File validation → Content extraction → Proposition generation
-2. **Query Processing**: User query → Embedding generation → Vector search → Context composition → LLM generation
-3. **External API Communication**: Secure API calls to OpenRouter and Pinecone with authentication
-
-### 1.3 Trust Boundaries
-
-| Boundary | Description | Trust Level | Protection Mechanisms |
-|----------|-------------|-------------|----------------------|
-| User ↔ Application | Direct user interaction via Gradio UI | Low Trust | Input validation, rate limiting |
-| Application ↔ Local Filesystem | File read/write operations | Medium Trust | File permission controls, path validation |
-| Application ↔ External APIs | HTTPS communication with OpenRouter/Pinecone | Low Trust | TLS 1.3, API key authentication, request signing |
-| Application ↔ ML Models | Local model loading and inference | Medium Trust | Model integrity validation, secure loading |
-
-## 2. Threat Analysis Methodology
-
-### 2.1 STRIDE Analysis Framework
-
-The threat model uses Microsoft's STRIDE framework to systematically identify threats:
-
-- **S**poofing: Impersonation of legitimate users or systems
-- **T**ampering: Unauthorized modification of data or code
-- **R**epudiation: Denial of actions performed
-- **I**nformation Disclosure: Exposure of sensitive information
-- **D**enial of Service: Disruption of service availability
-- **E**levation of Privilege: Gaining unauthorized access
+### 2.1 STRIDE Analysis
+- **Spoofing**: Impersonation of legitimate users or systems
+- **Tampering**: Unauthorized modification of data or code
+- **Repudiation**: Denial of actions performed
+- **Information Disclosure**: Exposure of sensitive information
+- **Denial of Service**: Disruption of service availability
+- **Elevation of Privilege**: Gaining unauthorized access
 
 ### 2.2 Risk Assessment Matrix
 
 | Likelihood | Impact | Risk Level | Mitigation Priority |
 |------------|--------|------------|-------------------|
-| High (Frequent) | High (Severe) | Critical | Immediate Action Required |
-| High | Medium | High | Urgent Action Required |
-| Medium | High | High | Urgent Action Required |
-| Medium | Medium | Medium | Planned Mitigation |
-| Low | Any | Low | Monitor Only |
+| High | High | Critical | Immediate |
+| High | Medium | High | Urgent |
+| Medium | High | High | Urgent |
+| Medium | Medium | Medium | Planned |
+| Low | Any | Low | Monitor |
 
 ## 3. Identified Threats
 
-### 3.1 Critical Threats (Immediate Action Required)
+### 3.1 Data Flow Threats
 
-#### Threat T001: API Key Exposure (Information Disclosure)
-- **Category**: Information Disclosure
-- **Likelihood**: Medium
-- **Impact**: Critical
-- **Risk Level**: Critical
-- **Affected Assets**: OpenRouter API key, Pinecone API key, service access
-- **Attack Vectors**:
-  - Memory dumps during application execution
-  - Configuration file exposure
-  - Environment variable leakage
-  - Local filesystem compromise
-- **Current Mitigations**:
-  - Environment variable storage
-  - No keys in source code
-  - Runtime key validation
-- **Additional Recommendations**:
-  - Implement API key rotation
-  - Add memory protection for sensitive data
-  - Use secure key management service
-
-#### Threat T002: Local Environment Compromise (Elevation of Privilege)
-- **Category**: Elevation of Privilege
-- **Likelihood**: Medium
-- **Impact**: Critical
-- **Risk Level**: Critical
-- **Affected Assets**: All local data, processing capabilities, user documents
-- **Attack Vectors**:
-  - Malware infection via document uploads
-  - Supply chain attacks on dependencies
-  - Physical access to execution environment
-  - Privilege escalation exploits
-- **Current Mitigations**:
-  - File type restrictions
-  - Size limitations
-  - Sandboxed processing (planned)
-- **Additional Recommendations**:
-  - Implement comprehensive malware scanning
-  - Add process isolation and privilege dropping
-  - Regular security updates and patching
-
-### 3.2 High Threats (Urgent Action Required)
-
-#### Threat T003: LLM Prompt Injection (Tampering)
+#### Threat: T001 - Document Content Tampering
 - **Category**: Tampering
+- **Description**: Malicious modification of uploaded documents before processing
+- **Assets**: Document content, extracted propositions
+- **Attack Vector**: File upload manipulation, man-in-the-middle during transfer
+- **Likelihood**: Medium
+- **Impact**: High
+- **Risk Level**: High
+
+**Mitigation Strategies**:
+- File integrity validation using SHA-256 hashing
+- Content type verification beyond file extension
+- Size limits (10MB max) to prevent oversized malicious files
+- Sandboxed processing environment
+
+#### Threat: T002 - API Key Exposure
+- **Category**: Information Disclosure
+- **Description**: Unauthorized access to OpenRouter or Pinecone API keys
+- **Assets**: API credentials, service access
+- **Attack Vector**: Local environment compromise, memory dumps, configuration leaks
+- **Likelihood**: Medium
+- **Impact**: Critical
+- **Risk Level**: Critical
+
+**Mitigation Strategies**:
+- Environment variable storage only
+- No API keys in source code or configuration files
+- Runtime key validation and rotation
+- Memory protection for sensitive data
+
+#### Threat: T003 - Model Poisoning
+- **Category**: Tampering
+- **Description**: Compromised ML models providing malicious outputs
+- **Assets**: Embedding models, cross-encoder models
+- **Attack Vector**: Supply chain attacks, model repository compromise
+- **Likelihood**: Low
+- **Impact**: High
+- **Risk Level**: Medium
+
+**Mitigation Strategies**:
+- `trust_remote_code=False` for all model loading
+- Model integrity verification (checksums)
+- Local model caching with validation
+- Regular security audits of model dependencies
+
+### 3.2 Processing Pipeline Threats
+
+#### Threat: T004 - LLM Prompt Injection
+- **Category**: Tampering
+- **Description**: Malicious prompts causing LLM to generate harmful content
+- **Assets**: Generated responses, system behavior
+- **Attack Vector**: Crafted user queries with embedded instructions
 - **Likelihood**: High
 - **Impact**: Medium
 - **Risk Level**: High
-- **Affected Assets**: Generated responses, system behavior
-- **Attack Vectors**:
-  - Crafted user queries with embedded instructions
-  - Malicious document content affecting context
-  - Multi-turn conversation manipulation
-- **Current Mitigations**:
-  - Input sanitization
-  - Length limits
-  - System prompt hardening
-- **Additional Recommendations**:
-  - Implement prompt injection detection
-  - Add output validation and filtering
-  - Use LLM guardrails and content policies
 
-#### Threat T004: Network Interception (Information Disclosure)
-- **Category**: Information Disclosure
-- **Likelihood**: Medium
-- **Impact**: High
-- **Risk Level**: High
-- **Affected Assets**: API keys, query data, response content
-- **Attack Vectors**:
-  - Man-in-the-middle attacks
-  - Network sniffing
-  - DNS poisoning
-  - Certificate spoofing
-- **Current Mitigations**:
-  - HTTPS enforcement
-  - Certificate validation
-- **Additional Recommendations**:
-  - Implement certificate pinning
-  - Add request/response encryption
-  - Use VPN or secure network channels
+**Mitigation Strategies**:
+- Input sanitization and length limits
+- System prompt hardening with explicit boundaries
+- Output validation and filtering
+- Rate limiting per user session
 
-#### Threat T005: Unauthorized System Access (Elevation of Privilege)
-- **Category**: Elevation of Privilege
-- **Likelihood**: Medium
-- **Impact**: High
-- **Risk Level**: High
-- **Affected Assets**: Application functionality, user data
-- **Attack Vectors**:
-  - Weak authentication mechanisms
-  - Session management flaws
-  - Authorization bypass
-  - Default credential exploitation
-- **Current Mitigations**:
-  - Basic authentication (staging/production)
-  - Session management
-- **Additional Recommendations**:
-  - Implement multi-factor authentication
-  - Add role-based access control
-  - Regular credential rotation
-
-### 3.3 Medium Threats (Planned Mitigation)
-
-#### Threat T006: Model Poisoning (Tampering)
-- **Category**: Tampering
-- **Likelihood**: Low
-- **Impact**: High
-- **Risk Level**: Medium
-- **Affected Assets**: ML models, embeddings, retrieval accuracy
-- **Attack Vectors**:
-  - Supply chain attacks on model repositories
-  - Model repository compromise
-  - Malicious model updates
-- **Current Mitigations**:
-  - `trust_remote_code=False`
-  - Model integrity validation
-- **Additional Recommendations**:
-  - Implement model signature verification
-  - Use local model caching with validation
-  - Regular security audits of model dependencies
-
-#### Threat T007: Resource Exhaustion (Denial of Service)
+#### Threat: T005 - Resource Exhaustion
 - **Category**: Denial of Service
+- **Description**: Excessive resource consumption causing system unavailability
+- **Assets**: CPU, memory, network bandwidth
+- **Attack Vector**: Large file uploads, rapid API calls, memory-intensive queries
 - **Likelihood**: Medium
 - **Impact**: Medium
 - **Risk Level**: Medium
-- **Affected Assets**: CPU, memory, network bandwidth
-- **Attack Vectors**:
-  - Large file uploads
-  - Rapid API calls
-  - Memory-intensive queries
-  - Malicious document processing
-- **Current Mitigations**:
-  - File size limits
-  - Rate limiting
-  - Memory monitoring
-- **Additional Recommendations**:
-  - Implement adaptive rate limiting
-  - Add resource usage quotas
-  - Graceful degradation under load
 
-#### Threat T008: Information Leakage via Citations (Information Disclosure)
+**Mitigation Strategies**:
+- File size limits and processing timeouts
+- Rate limiting (60 requests/minute)
+- Memory usage monitoring and limits
+- Graceful degradation under load
+
+#### Threat: T006 - Information Leakage via Citations
 - **Category**: Information Disclosure
+- **Description**: Exposure of sensitive document metadata through citations
+- **Assets**: Document paths, internal identifiers
+- **Attack Vector**: Citation format revealing internal structure
 - **Likelihood**: Low
 - **Impact**: Medium
-- **Risk Level**: Medium
-- **Affected Assets**: Document metadata, file paths, internal identifiers
-- **Attack Vectors**:
-  - Citation format analysis
-  - Metadata exposure in responses
-  - Path traversal in citations
-- **Current Mitigations**:
-  - Citation format sanitization
-- **Additional Recommendations**:
-  - Implement path obfuscation
-  - Add metadata filtering
-  - Use generic citation formats
+- **Risk Level**: Low
 
-#### Threat T009: Document Content Tampering (Tampering)
+**Mitigation Strategies**:
+- Sanitized citation formats
+- Path obfuscation in public responses
+- Metadata filtering before output
+
+### 3.3 MoE-Specific Threats
+
+#### Threat: T007 - Expert Routing Manipulation
 - **Category**: Tampering
+- **Description**: Adversarial queries manipulating expert routing decisions
+- **Assets**: Retrieval quality, system performance
+- **Attack Vector**: Queries designed to trigger specific routing patterns
+- **Likelihood**: Low
+- **Impact**: Medium
+- **Risk Level**: Low
+
+**Mitigation Strategies**:
+- Routing decision validation
+- Confidence threshold monitoring
+- Fallback to default routing on anomalies
+
+#### Threat: T008 - Centroid Poisoning
+- **Category**: Tampering
+- **Description**: Malicious documents affecting expert centroids
+- **Assets**: Expert routing accuracy
+- **Attack Vector**: Uploaded documents designed to shift centroids
+- **Likelihood**: Low
+- **Impact**: Low
+- **Risk Level**: Low
+
+**Mitigation Strategies**:
+- Centroid update validation
+- Outlier detection in embedding updates
+- Manual centroid reset capabilities
+
+### 3.4 Infrastructure Threats
+
+#### Threat: T009 - Local Environment Compromise
+- **Category**: Elevation of Privilege
+- **Description**: Attacker gaining control of local execution environment
+- **Assets**: All local data and processing capabilities
+- **Attack Vector**: Malware infection, physical access, supply chain attacks
 - **Likelihood**: Medium
-- **Impact**: Medium
-- **Risk Level**: Medium
-- **Affected Assets**: Document content, extracted propositions
-- **Attack Vectors**:
-  - File modification during upload
-  - Man-in-the-middle during transfer
-  - Local file system compromise
-- **Current Mitigations**:
-  - File integrity validation
-  - Content type verification
-- **Additional Recommendations**:
-  - Implement file integrity hashing
-  - Add content validation
-  - Use secure file transfer protocols
+- **Impact**: Critical
+- **Risk Level**: High
 
-#### Threat T010: MoE Component Manipulation (Tampering)
-- **Category**: Tampering
-- **Likelihood**: Low
-- **Impact**: Medium
-- **Risk Level**: Medium
-- **Affected Assets**: Expert routing, retrieval quality
-- **Attack Vectors**:
-  - Adversarial queries affecting routing
-  - Centroid poisoning via malicious documents
-  - Routing decision manipulation
-- **Current Mitigations**:
-  - Routing validation
-  - Centroid update controls
-- **Additional Recommendations**:
-  - Implement routing decision monitoring
-  - Add outlier detection for centroids
-  - Use secure centroid updates
+**Mitigation Strategies**:
+- Principle of least privilege
+- Regular security updates
+- Antivirus/endpoint protection
+- Secure boot verification
 
-## 4. Risk Assessment Summary
+#### Threat: T010 - Network Interception
+- **Category**: Information Disclosure
+- **Description**: Eavesdropping on API communications
+- **Assets**: API keys, query data, responses
+- **Attack Vector**: Man-in-the-middle attacks, network sniffing
+- **Likelihood**: Medium
+- **Impact**: High
+- **Risk Level**: High
 
-### 4.1 Risk Distribution
+**Mitigation Strategies**:
+- HTTPS-only communications
+- Certificate pinning for APIs
+- API key rotation
+- Request/response encryption
 
-| Risk Level | Count | Percentage | Priority |
-|------------|-------|------------|----------|
-| Critical | 2 | 20% | Immediate |
-| High | 3 | 30% | Urgent |
-| Medium | 5 | 50% | Planned |
-| Low | 0 | 0% | Monitor |
+## 4. Security Controls
 
-### 4.2 Risk Mitigation Timeline
+### 4.1 Preventive Controls
 
-#### Immediate Actions (Week 1-2):
-- Implement API key rotation mechanism
-- Add memory protection for sensitive data
-- Deploy malware scanning for uploads
-- Implement process isolation and privilege dropping
+#### Input Validation
+```python
+def validate_file_upload(file_path: str, content: bytes) -> bool:
+    """Comprehensive file validation"""
+    # File type verification
+    allowed_types = {'.pdf', '.txt', '.md'}
+    if not any(file_path.lower().endswith(ext) for ext in allowed_types):
+        return False
 
-#### Urgent Actions (Week 3-4):
-- Deploy LLM prompt injection detection
-- Implement certificate pinning for APIs
-- Add multi-factor authentication
-- Enhance network security controls
+    # Size limits
+    if len(content) > 10 * 1024 * 1024:  # 10MB
+        return False
 
-#### Planned Actions (Month 2-3):
-- Implement model signature verification
-- Deploy adaptive rate limiting
-- Add comprehensive metadata filtering
-- Implement MoE security monitoring
+    # Content integrity check
+    file_hash = hashlib.sha256(content).hexdigest()
+    # Store hash for integrity verification
 
-## 5. Security Controls Mapping
+    return True
+```
 
-### 5.1 Preventive Controls
+#### API Security
+```python
+class SecureAPIManager:
+    """Secure API communication manager"""
 
-| Control ID | Control Name | Threat Coverage | Implementation Status |
-|------------|--------------|-----------------|----------------------|
-| PC001 | Input Validation | T003, T009 | Implemented |
-| PC002 | File Integrity | T009 | Implemented |
-| PC003 | API Key Management | T001 | Partial |
-| PC004 | Authentication | T005 | Implemented (Basic) |
-| PC005 | Authorization | T005 | Planned |
-| PC006 | Encryption at Rest | T001, T004 | Not Implemented |
-| PC007 | Secure Configuration | T002 | Implemented |
+    def __init__(self):
+        self._session = requests.Session()
+        self._session.verify = True  # SSL verification
+        self._rate_limiter = RateLimiter(requests_per_minute=60)
 
-### 5.2 Detective Controls
+    def make_secure_request(self, url: str, payload: dict, api_key: str) -> dict:
+        """Secure API request with validation"""
+        self._rate_limiter.wait_if_needed()
 
-| Control ID | Control Name | Threat Coverage | Implementation Status |
-|------------|--------------|-----------------|----------------------|
-| DC001 | Security Monitoring | All Threats | Partial |
-| DC002 | Log Analysis | T001-T010 | Implemented |
-| DC003 | Anomaly Detection | T007, T010 | Planned |
-| DC004 | File Integrity Monitoring | T009 | Not Implemented |
-| DC005 | API Usage Monitoring | T001, T007 | Implemented |
+        headers = {
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json',
+            'User-Agent': 'Personal-RAG/2.0.0'
+        }
 
-### 5.3 Corrective Controls
+        try:
+            response = self._session.post(url, json=payload, headers=headers, timeout=60)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"API request failed: {e}")
+            raise
+```
 
-| Control ID | Control Name | Threat Coverage | Implementation Status |
-|------------|--------------|-----------------|----------------------|
-| CC001 | Incident Response | All Threats | Implemented |
-| CC002 | Backup and Recovery | T002, T007 | Partial |
-| CC003 | Patch Management | T002 | Implemented |
-| CC004 | Configuration Management | T005 | Implemented |
+### 4.2 Detective Controls
+
+#### Security Monitoring
+```python
+class SecurityMonitor:
+    """Comprehensive security monitoring"""
+
+    def __init__(self):
+        self._anomaly_detector = AnomalyDetector()
+        self._threat_logger = ThreatLogger()
+
+    def monitor_request(self, request_data: dict) -> None:
+        """Monitor incoming requests for security threats"""
+        # Input validation anomalies
+        if self._anomaly_detector.detect_input_anomaly(request_data):
+            self._threat_logger.log_threat('INPUT_ANOMALY', request_data)
+
+        # Rate limiting violations
+        if self._rate_limiter.is_violation():
+            self._threat_logger.log_threat('RATE_LIMIT_VIOLATION', request_data)
+
+        # API response anomalies
+        # Model behavior anomalies
+```
+
+#### Audit Logging
+```python
+class SecurityAuditor:
+    """Security audit logging"""
+
+    def log_security_event(self, event_type: str, details: dict) -> None:
+        """Log security-relevant events"""
+        audit_entry = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'event_type': event_type,
+            'severity': self._calculate_severity(event_type),
+            'details': details,
+            'user_context': self._get_user_context(),
+            'system_context': self._get_system_context()
+        }
+
+        # Secure logging with integrity protection
+        self._secure_log(audit_entry)
+```
+
+### 4.3 Corrective Controls
+
+#### Incident Response
+```python
+class IncidentResponder:
+    """Automated incident response"""
+
+    def handle_security_incident(self, incident_type: str, context: dict) -> None:
+        """Automated response to security incidents"""
+        if incident_type == 'API_KEY_COMPROMISE':
+            self._rotate_api_keys()
+            self._notify_administrator()
+            self._enable_enhanced_monitoring()
+
+        elif incident_type == 'MALICIOUS_FILE':
+            self._quarantine_file(context['file_path'])
+            self._scan_system_for_similar()
+            self._update_file_validation_rules()
+```
+
+## 5. Risk Assessment Matrix
+
+| Threat ID | Threat Name | Likelihood | Impact | Risk Level | Mitigation Status |
+|-----------|-------------|------------|--------|------------|-------------------|
+| T001 | Document Content Tampering | Medium | High | High | Implemented |
+| T002 | API Key Exposure | Medium | Critical | Critical | Implemented |
+| T003 | Model Poisoning | Low | High | Medium | Implemented |
+| T004 | LLM Prompt Injection | High | Medium | High | Implemented |
+| T005 | Resource Exhaustion | Medium | Medium | Medium | Implemented |
+| T006 | Information Leakage via Citations | Low | Medium | Low | Planned |
+| T007 | Expert Routing Manipulation | Low | Medium | Low | Planned |
+| T008 | Centroid Poisoning | Low | Low | Low | Planned |
+| T009 | Local Environment Compromise | Medium | Critical | High | Partial |
+| T010 | Network Interception | Medium | High | High | Implemented |
 
 ## 6. Compliance Considerations
 
-### 6.1 Regulatory Requirements
+### 6.1 Data Protection
+- **Local Processing**: All document processing occurs locally, reducing data exposure
+- **Minimal Data Retention**: No persistent storage of user documents beyond session
+- **User Consent**: Clear indication of local-only processing
 
-| Regulation | Applicable Threats | Required Controls | Status |
-|------------|-------------------|------------------|--------|
-| GDPR | T001, T004, T008 | Data encryption, consent management | Partial |
-| CCPA | T001, T004, T008 | Data minimization, user rights | Partial |
-| OWASP Top 10 | T003, T005, T007 | Input validation, auth controls | Implemented |
+### 6.2 API Compliance
+- **OpenRouter**: Compliance with API usage policies and rate limits
+- **Pinecone**: Adherence to data residency and privacy requirements
+- **HTTPS Enforcement**: All external communications use secure protocols
 
-### 6.2 Security Standards Alignment
-
-| Standard | Coverage | Implementation Level |
-|----------|----------|---------------------|
-| NIST Cybersecurity Framework | Identify, Protect, Detect, Respond, Recover | Medium |
-| ISO 27001 | Information security management | Partial |
-| OWASP Application Security | Web application security | High |
+### 6.3 Security Standards
+- **OWASP Top 10**: Addressed through input validation and secure coding practices
+- **Model Security**: Following ML security best practices for model loading and validation
+- **Logging Standards**: Structured logging for security events and audit trails
 
 ## 7. Testing and Validation
 
-### 7.1 Threat Model Validation
+### 7.1 Security Test Cases
 
-#### Automated Testing:
-- Security unit tests for input validation
-- API security testing
-- Configuration security scanning
-- Dependency vulnerability scanning
+```python
+class SecurityTestSuite:
+    """Comprehensive security testing"""
 
-#### Manual Testing:
-- Penetration testing of external interfaces
-- Code review for security vulnerabilities
-- Configuration review and hardening validation
+    def test_file_upload_security(self):
+        """Test file upload security controls"""
+        # Malformed files
+        # Oversized files
+        # Malicious content
+        # Path traversal attempts
 
-### 7.2 Ongoing Monitoring
+    def test_api_key_protection(self):
+        """Test API key security"""
+        # Memory dump analysis
+        # Configuration exposure
+        # Key rotation procedures
 
-#### Security Metrics:
-- Failed authentication attempts
-- File upload rejections
-- API rate limit violations
-- Security event frequency
-- Vulnerability scan results
+    def test_prompt_injection_resistance(self):
+        """Test LLM prompt injection defenses"""
+        # Common injection patterns
+        # Encoding variations
+        # Multi-turn injection attempts
+```
 
-## 8. Future Security Enhancements
+### 7.2 Penetration Testing Scope
 
-### 8.1 Advanced Threat Detection
+- **External Testing**: API endpoints, file uploads, user interface
+- **Internal Testing**: Code review, dependency analysis, configuration security
+- **Model Security**: Adversarial input testing, model poisoning attempts
+
+## 8. Monitoring and Alerting
+
+### 8.1 Security Metrics
+
+| Metric | Target | Alert Threshold | Response |
+|--------|--------|-----------------|----------|
+| Failed Authentication Attempts | <5/hour | >10/hour | Immediate investigation |
+| File Upload Rejections | <1% | >5% | Security review |
+| API Rate Limit Hits | <10/minute | >50/minute | Rate limit adjustment |
+| Model Loading Failures | 0 | >0 | Security alert |
+| Memory Usage Spikes | <80% | >95% | Resource investigation |
+
+### 8.2 Alert Classification
+
+- **Critical**: Immediate response required (API key exposure, system compromise)
+- **High**: Response within 1 hour (suspicious file uploads, rate limit violations)
+- **Medium**: Response within 24 hours (configuration issues, performance anomalies)
+- **Low**: Monitoring and trending (minor validation failures)
+
+## 9. Future Security Enhancements
+
+### 9.1 Advanced Threat Detection
 - Machine learning-based anomaly detection
 - Behavioral analysis for user patterns
 - Integration with threat intelligence feeds
 
-### 8.2 Enhanced Encryption
+### 9.2 Enhanced Encryption
 - End-to-end encryption for sensitive operations
 - Secure enclaves for model execution
 - Hardware security module integration
 
-### 8.3 Automated Security
-- Security policy as code
+### 9.3 Compliance Automation
 - Automated compliance checking
+- Security policy as code
 - Continuous security validation in CI/CD
 
-## 9. Conclusion
+## 10. Conclusion
 
-This threat model identifies and prioritizes the security risks facing the Personal RAG Chatbot system. The local-first architecture provides inherent security advantages by minimizing data exposure, but critical attention is required for API security, input validation, and system hardening.
+This threat model identifies the key security risks for the Personal RAG Chatbot system and provides a comprehensive framework for addressing them. The local-first architecture significantly reduces attack surface compared to cloud-based solutions, but careful attention to API security, input validation, and model integrity remains essential.
 
-**Immediate Priorities:**
-1. Implement API key rotation and secure key management
-2. Deploy comprehensive malware scanning
-3. Add process isolation and privilege management
-4. Enhance LLM prompt injection defenses
+**Key Security Principles**:
+- Defense in depth with multiple security layers
+- Principle of least privilege for all operations
+- Continuous monitoring and rapid response capabilities
+- Regular security assessments and updates
 
-**Long-term Strategy:**
-- Continuous threat monitoring and assessment
-- Regular security testing and validation
-- Proactive vulnerability management
-- Security awareness and training
+**Risk Summary**:
+- 2 Critical risks (requiring immediate attention)
+- 3 High risks (requiring urgent mitigation)
+- 5 Medium/Low risks (requiring planned mitigation)
 
-The threat model will be updated quarterly or when significant system changes occur to ensure continued relevance and effectiveness.
-
----
-
-**Document Approval:**
-- **Security Architect**: [Signature]
-- **Date**: 2025-08-30
-
-**Review Schedule:**
-- **Next Review**: 2025-11-30
-- **Review Frequency**: Quarterly
+This threat model will be updated regularly as the system evolves and new threats are identified.

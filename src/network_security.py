@@ -10,12 +10,17 @@ import os
 import ssl
 import hashlib
 import secrets
+import time
+import requests
+import re
 from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 import json
 from urllib.parse import urlparse
+from datetime import datetime, timedelta
+import threading
 
-from .security import log_security_event
+from .security import log_security_event, RateLimiter
 
 class HTTPSManager:
     """HTTPS configuration and certificate management"""
@@ -402,6 +407,250 @@ class NetworkFirewall:
             "ip_address": ip_address
         }, "INFO")
 
+class APISecurityManager:
+    """Enhanced API security management with rate limiting and key rotation"""
+
+    def __init__(self, config: Any):
+        self.config = config
+        self._api_rate_limiters: Dict[str, RateLimiter] = {}
+        self._key_store: Dict[str, Dict[str, Any]] = {}
+        self._key_rotation_lock = threading.Lock()
+        self._load_api_keys()
+
+    def _load_api_keys(self):
+        """Load API keys from secure storage"""
+        key_store_file = Path("config/api_keys_secure.json")
+        if key_store_file.exists():
+            try:
+                with open(key_store_file, 'r') as f:
+                    self._key_store = json.load(f)
+            except Exception as e:
+                log_security_event("API_KEY_LOAD_ERROR", {"error": str(e)}, "ERROR")
+
+    def _save_api_keys(self):
+        """Save API keys to secure storage"""
+        key_store_file = Path("config/api_keys_secure.json")
+        key_store_file.parent.mkdir(exist_ok=True)
+        try:
+            with open(key_store_file, 'w') as f:
+                json.dump(self._key_store, f, indent=2)
+        except Exception as e:
+            log_security_event("API_KEY_SAVE_ERROR", {"error": str(e)}, "ERROR")
+
+    def get_api_rate_limiter(self, service: str) -> RateLimiter:
+        """Get or create rate limiter for specific API service"""
+        if service not in self._api_rate_limiters:
+            # Configure rate limits based on service
+            if service.lower() == "openrouter":
+                requests_per_minute = getattr(self.config, 'openrouter_requests_per_minute', 60)
+                burst_limit = getattr(self.config, 'openrouter_burst_limit', 100)
+            elif service.lower() == "pinecone":
+                requests_per_minute = getattr(self.config, 'pinecone_requests_per_minute', 30)
+                burst_limit = getattr(self.config, 'pinecone_burst_limit', 50)
+            else:
+                requests_per_minute = 60
+                burst_limit = 100
+
+            self._api_rate_limiters[service] = RateLimiter(
+                requests_per_minute=requests_per_minute,
+                burst_limit=burst_limit
+            )
+
+        return self._api_rate_limiters[service]
+
+    def check_api_rate_limit(self, service: str, identifier: str) -> bool:
+        """Check if API request should be rate limited"""
+        rate_limiter = self.get_api_rate_limiter(service)
+        if rate_limiter.is_rate_limited(identifier):
+            log_security_event("API_RATE_LIMIT_EXCEEDED", {
+                "service": service,
+                "identifier": identifier
+            }, "WARNING")
+            return True
+        rate_limiter.record_request(identifier)
+        return False
+
+    def get_secure_api_headers(self, service: str, api_key: str) -> Dict[str, str]:
+        """Get secure headers for API requests with enhanced security"""
+        base_headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+            "User-Agent": f"Personal-RAG/2.0.0-{service}",
+            "X-Request-ID": secrets.token_hex(16),
+            "X-Timestamp": str(int(time.time())),
+            "X-API-Version": "v1",
+        }
+
+        # Service-specific headers
+        if service.lower() == "openrouter":
+            base_headers.update({
+                "HTTP-Referer": os.getenv("OPENROUTER_REFERER", ""),
+                "X-Title": os.getenv("OPENROUTER_TITLE", "Personal RAG"),
+                "X-OpenRouter-Version": "1.0.0"
+            })
+        elif service.lower() == "pinecone":
+            base_headers.update({
+                "X-Pinecone-API-Version": "2024-07",
+                "X-Pinecone-Source-Tag": "personal-rag"
+            })
+
+        return base_headers
+
+    def validate_api_response(self, service: str, response: requests.Response) -> Tuple[bool, str]:
+        """Validate API response for security issues"""
+        if response.status_code >= 400:
+            return False, f"API error: {response.status_code}"
+
+        # Check for suspicious response patterns
+        try:
+            response_text = response.text.lower()
+
+            # Check for error patterns that might indicate compromise
+            error_patterns = [
+                "internal server error",
+                "database error",
+                "sql syntax error",
+                "authentication failed"
+            ]
+
+            for pattern in error_patterns:
+                if pattern in response_text:
+                    log_security_event("SUSPICIOUS_API_RESPONSE", {
+                        "service": service,
+                        "status_code": response.status_code,
+                        "pattern": pattern
+                    }, "WARNING")
+                    return False, f"Suspicious API response pattern detected: {pattern}"
+
+        except Exception as e:
+            log_security_event("API_RESPONSE_VALIDATION_ERROR", {
+                "service": service,
+                "error": str(e)
+            }, "WARNING")
+
+        return True, "Response validation passed"
+
+    def rotate_api_key(self, service: str, new_key: str, old_key: Optional[str] = None) -> bool:
+        """Rotate API key with validation and atomic update"""
+        with self._key_rotation_lock:
+            # Validate new key format
+            if not self._validate_api_key_format(service, new_key):
+                return False
+
+            # Test new key if possible
+            if not self._test_api_key(service, new_key):
+                return False
+
+            # Store old key for rollback
+            timestamp = datetime.utcnow().isoformat()
+            rotation_record = {
+                "service": service,
+                "new_key": new_key,
+                "old_key": old_key,
+                "rotated_at": timestamp,
+                "rotated_by": os.getenv("USER") or "system"
+            }
+
+            # Update key store
+            if service not in self._key_store:
+                self._key_store[service] = {}
+
+            self._key_store[service]["current_key"] = new_key
+            self._key_store[service]["last_rotation"] = timestamp
+            self._key_store[service]["rotation_history"] = (
+                self._key_store[service].get("rotation_history", []) + [rotation_record]
+            )[-10:]  # Keep last 10 rotations
+
+            self._save_api_keys()
+
+            log_security_event("API_KEY_ROTATED", {
+                "service": service,
+                "rotated_at": timestamp
+            }, "INFO")
+
+            return True
+
+    def _validate_api_key_format(self, service: str, api_key: str) -> bool:
+        """Validate API key format for specific service"""
+        if not api_key or len(api_key.strip()) == 0:
+            return False
+
+        if service.lower() == "openrouter":
+            if not api_key.startswith("sk-or-v1-"):
+                return False
+            if len(api_key) < 50:
+                return False
+        elif service.lower() == "pinecone":
+            if len(api_key) < 64:
+                return False
+
+        return True
+
+    def _test_api_key(self, service: str, api_key: str) -> bool:
+        """Test API key validity (lightweight test)"""
+        try:
+            headers = self.get_secure_api_headers(service, api_key)
+
+            if service.lower() == "openrouter":
+                # Test with a minimal request
+                test_payload = {"model": "openrouter/auto", "messages": []}
+                response = requests.post(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    json=test_payload,
+                    headers=headers,
+                    timeout=10
+                )
+                # 401 means invalid key, other errors might be temporary
+                return response.status_code != 401
+
+            elif service.lower() == "pinecone":
+                # Test with index stats
+                response = requests.get(
+                    "https://api.pinecone.io/indexes",
+                    headers=headers,
+                    timeout=10
+                )
+                return response.status_code != 401
+
+        except Exception as e:
+            log_security_event("API_KEY_TEST_ERROR", {
+                "service": service,
+                "error": str(e)
+            }, "WARNING")
+            # Don't fail on network errors, only on auth failures
+            return True
+
+        return True
+
+    def get_api_key_health(self, service: str) -> Dict[str, Any]:
+        """Get API key health and rotation status"""
+        if service not in self._key_store:
+            return {"status": "no_key_configured"}
+
+        key_info = self._key_store[service]
+        last_rotation = key_info.get("last_rotation")
+
+        if last_rotation:
+            last_rotation_dt = datetime.fromisoformat(last_rotation)
+            days_since_rotation = (datetime.utcnow() - last_rotation_dt).days
+
+            # Recommend rotation every 30 days
+            if days_since_rotation > 30:
+                status = "rotation_recommended"
+            elif days_since_rotation > 60:
+                status = "rotation_required"
+            else:
+                status = "healthy"
+        else:
+            status = "never_rotated"
+
+        return {
+            "status": status,
+            "last_rotation": last_rotation,
+            "days_since_rotation": days_since_rotation if last_rotation else None,
+            "rotation_count": len(key_info.get("rotation_history", []))
+        }
+
 class NetworkSecurityManager:
     """Main network security coordinator"""
 
@@ -411,6 +660,7 @@ class NetworkSecurityManager:
         self.security_headers = SecurityHeadersManager()
         self.cors_manager = CORSPolicyManager(config.cors_allowed_origins or [])
         self.firewall = NetworkFirewall(config.trusted_proxies or [])
+        self.api_security = APISecurityManager(config)
 
     def get_ssl_context(self) -> Optional[ssl.SSLContext]:
         """Get SSL context for HTTPS"""
@@ -427,7 +677,7 @@ class NetworkSecurityManager:
 
         return self.https_manager.create_ssl_context(cert_file, key_file)
 
-    def get_response_headers(self, request_headers: Dict[str, str] = None) -> Dict[str, str]:
+    def get_response_headers(self, request_headers: Optional[Dict[str, str]] = None) -> Dict[str, str]:
         """Get all appropriate security headers for response"""
 
         headers = self.security_headers.get_security_headers(self.config.environment)
@@ -497,5 +747,33 @@ def create_secure_app_config() -> Dict[str, Any]:
     trusted_proxies = os.getenv("TRUSTED_PROXIES", "")
     if trusted_proxies:
         config["trusted_proxies"] = [proxy.strip() for proxy in trusted_proxies.split(",")]
+
+    return config
+
+# Convenience functions for API security integration
+def check_api_rate_limit(service: str, identifier: str) -> bool:
+    """Check if API request should be rate limited"""
+    network_mgr = get_network_security_manager(None)
+    return network_mgr.api_security.check_api_rate_limit(service, identifier)
+
+def get_secure_api_headers(service: str, api_key: str) -> Dict[str, str]:
+    """Get secure headers for API requests"""
+    network_mgr = get_network_security_manager(None)
+    return network_mgr.api_security.get_secure_api_headers(service, api_key)
+
+def validate_api_response(service: str, response: requests.Response) -> Tuple[bool, str]:
+    """Validate API response for security issues"""
+    network_mgr = get_network_security_manager(None)
+    return network_mgr.api_security.validate_api_response(service, response)
+
+def rotate_api_key(service: str, new_key: str, old_key: Optional[str] = None) -> bool:
+    """Rotate API key with validation"""
+    network_mgr = get_network_security_manager(None)
+    return network_mgr.api_security.rotate_api_key(service, new_key, old_key)
+
+def get_api_key_health(service: str) -> Dict[str, Any]:
+    """Get API key health status"""
+    network_mgr = get_network_security_manager(None)
+    return network_mgr.api_security.get_api_key_health(service)
 
     return config

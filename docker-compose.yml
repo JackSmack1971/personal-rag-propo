@@ -1,0 +1,126 @@
+version: '3.8'
+
+services:
+  # Production service
+  rag-chatbot-prod:
+    build:
+      context: .
+      target: production
+      dockerfile: Dockerfile
+    container_name: personal-rag-prod
+    ports:
+      - "7860:7860"
+    environment:
+      - ENVIRONMENT=production
+      - GRADIO_SERVER_NAME=0.0.0.0
+      - GRADIO_SERVER_PORT=7860
+      - GRADIO_ANALYTICS_ENABLED=false
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+      - ./config:/app/config:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - rag-network
+
+  # Development service
+  rag-chatbot-dev:
+    build:
+      context: .
+      target: production
+      dockerfile: Dockerfile
+    container_name: personal-rag-dev
+    ports:
+      - "7861:7860"
+    environment:
+      - ENVIRONMENT=development
+      - GRADIO_SERVER_NAME=0.0.0.0
+      - GRADIO_SERVER_PORT=7860
+      - GRADIO_ANALYTICS_ENABLED=false
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    profiles:
+      - dev
+    networks:
+      - rag-network
+
+  # Monitoring service (Prometheus + Grafana)
+  monitoring:
+    image: prom/prometheus:latest
+    container_name: rag-monitoring
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    profiles:
+      - monitoring
+    networks:
+      - rag-network
+
+  # Grafana for dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: rag-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./monitoring/grafana/data:/var/lib/grafana
+    restart: unless-stopped
+    depends_on:
+      - monitoring
+    profiles:
+      - monitoring
+    networks:
+      - rag-network
+
+  # Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: rag-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    profiles:
+      - full
+    networks:
+      - rag-network
+
+networks:
+  rag-network:
+    driver: bridge
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  redis_data:

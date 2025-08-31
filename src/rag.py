@@ -2,7 +2,13 @@ import os, json, requests
 import numpy as np
 from typing import List, Tuple, Optional
 from .vectorstore import query as vector_query
-from .security import get_secure_api_headers, log_security_event
+from .security import get_secure_api_headers, log_security_event, check_rate_limit
+from .network_security import check_api_rate_limit
+
+# Performance optimization imports
+from .embeddings import get_embedder, encode_optimized, get_optimal_backend, warm_up_model
+from .caching import embedding_cache, query_cache, warm_up_manager
+from .performance_benchmark import benchmarker, benchmark_rag_pipeline
 
 # MoE Integration imports
 from .moe.integration import get_moe_pipeline, process_query_with_moe, MoEPipelineResult
@@ -69,6 +75,15 @@ def _call_llm(cfg, system: str, question: str, context: str) -> str:
     """Secure LLM API call with comprehensive security controls"""
     url = "https://openrouter.ai/api/v1/chat/completions"
 
+    # Check rate limiting before making request
+    client_identifier = f"llm_request_{hash(question) % 1000}"  # Simple client identifier
+    if check_api_rate_limit("openrouter", client_identifier):
+        log_security_event("API_RATE_LIMIT_EXCEEDED", {
+            "service": "openrouter",
+            "identifier": client_identifier
+        }, "WARNING")
+        raise Exception("API rate limit exceeded. Please try again later.")
+
     # Use secure API headers
     headers = get_secure_api_headers("openrouter", cfg.OPENROUTER_API_KEY)
     headers.update({
@@ -83,18 +98,22 @@ def _call_llm(cfg, system: str, question: str, context: str) -> str:
             {"role":"user","content": f"Question: {question}\\n\\nSources:\\n{context}"}
         ],
         "temperature": 0.0,
-        "max_tokens": getattr(cfg, 'MAX_RESPONSE_TOKENS', 1000)
+        "max_tokens": getattr(cfg, 'OPENROUTER_MAX_TOKENS', 1000)
     }
+
+    # Apply timeout from configuration
+    timeout = getattr(cfg, 'API_REQUEST_TIMEOUT', 60)
 
     try:
         log_security_event("API_REQUEST_STARTED", {
             "service": "openrouter",
             "model": cfg.OPENROUTER_MODEL,
             "question_length": len(question),
-            "context_length": len(context)
+            "context_length": len(context),
+            "timeout": timeout
         }, "INFO")
 
-        r = requests.post(url, headers=headers, json=payload, timeout=60)
+        r = requests.post(url, headers=headers, json=payload, timeout=timeout)
         r.raise_for_status()
 
         response = r.json()["choices"][0]["message"]["content"]
@@ -123,10 +142,21 @@ def _call_llm(cfg, system: str, question: str, context: str) -> str:
 
 def rag_chat(cfg, embedder, message: str, history: List[Tuple[str,str]]):
     """
-    Enhanced RAG chat function with MoE integration support.
+    Enhanced RAG chat function with MoE integration support and performance optimizations.
 
     Uses MoE pipeline when enabled, falls back to traditional RAG otherwise.
+    Includes comprehensive benchmarking and caching.
     """
+    # Benchmark the entire RAG pipeline
+    return benchmarker.benchmark_operation(
+        "rag_pipeline_full",
+        _rag_chat_impl,
+        cfg, embedder, message, history,
+        metadata={"query_length": len(message), "moe_enabled": get_moe_config().enabled}
+    ).success and _rag_chat_impl(cfg, embedder, message, history) or "Error processing query"
+
+def _rag_chat_impl(cfg, embedder, message: str, history: List[Tuple[str,str]]) -> str:
+    """Internal RAG implementation with fallback logic"""
     try:
         # Check if MoE is enabled
         moe_config = get_moe_config()
@@ -142,16 +172,45 @@ def rag_chat(cfg, embedder, message: str, history: List[Tuple[str,str]]):
 
 def _rag_chat_traditional(cfg, embedder, message: str, history: List[Tuple[str,str]]) -> str:
     """
-    Traditional RAG implementation (original behavior).
+    Traditional RAG implementation with performance optimizations.
     """
-    qvec = embedder.encode(message, normalize_embeddings=True).tolist()
+    # Generate optimized embedding with caching
+    model_name = getattr(cfg, 'EMBED_MODEL', 'BAAI/bge-small-en-v1.5')
+    backend = getattr(cfg, 'SENTENCE_TRANSFORMERS_BACKEND', get_optimal_backend())
+
+    # Try embedding cache first
+    cached_embedding = embedding_cache.get(message, model_name, backend=backend)
+    if cached_embedding is not None:
+        qvec = cached_embedding.tolist()
+        # Check query cache with available embedding
+        cached_result = query_cache.get_similar(message, np.array(qvec))
+        if cached_result:
+            return cached_result
+    else:
+        # Warm up model if needed
+        if not warm_up_manager.is_warmed_up(model_name, backend):
+            warm_up_manager.warm_up_model(embedder, model_name, backend)
+
+        # Encode with optimizations
+        qvec = encode_optimized(embedder, [message], normalize_embeddings=True)[0].tolist()
+
+        # Cache the embedding
+        embedding_cache.put(message, model_name, np.array(qvec), backend=backend)
+
+    # Query vector store
     res = vector_query(cfg, qvec, top_k=cfg.TOP_K, namespace=cfg.NAMESPACE)
     matches = [{"id":m["id"], "score":m["score"], "metadata": m.get("metadata",{})} for m in res.get("matches", [])]
-    ctx = _compose_context(matches)
+
     if not matches:
-        return "No strong match found."
-    answer = _call_llm(cfg, SYSTEM_PROMPT, message, ctx)
-    return answer
+        result = "No strong match found."
+    else:
+        ctx = _compose_context(matches)
+        result = _call_llm(cfg, SYSTEM_PROMPT, message, ctx)
+
+    # Cache the result
+    query_cache.put(message, np.array(qvec), result)
+
+    return result
 
 
 def _rag_chat_with_moe(cfg, embedder, message: str, history: List[Tuple[str,str]]) -> str:

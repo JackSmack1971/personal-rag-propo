@@ -1,0 +1,97 @@
+groups:
+  - name: rag_chatbot_alerts
+    rules:
+      # Application health alerts
+      - alert: RAGChatbotDown
+        expr: up{job="rag-chatbot"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "RAG Chatbot is down"
+          description: "RAG Chatbot has been down for more than 1 minute."
+
+      # System resource alerts
+      - alert: HighMemoryUsage
+        expr: (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 90% for more than 5 minutes."
+
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 95
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 95% for more than 5 minutes."
+
+      - alert: HighDiskUsage
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space"
+          description: "Disk space is below 10% for more than 5 minutes."
+
+      # Application-specific alerts
+      - alert: RAGChatbotHighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="rag-chatbot"}[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High response time detected"
+          description: "95th percentile response time is above 5 seconds for more than 5 minutes."
+
+      - alert: RAGChatbotHighErrorRate
+        expr: rate(http_requests_total{status=~"5..", job="rag-chatbot"}[5m]) / rate(http_requests_total{job="rag-chatbot"}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is above 5% for more than 5 minutes."
+
+      # Redis alerts
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis is down"
+          description: "Redis has been down for more than 1 minute."
+
+      - alert: RedisMemoryHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis memory usage high"
+          description: "Redis memory usage is above 90% for more than 5 minutes."
+
+      # Security alerts
+      - alert: SecurityEventsHigh
+        expr: increase(security_events_total[10m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High security events detected"
+          description: "Security events increased by more than 100 in the last 10 minutes."
+
+      - alert: RateLimitExceeded
+        expr: increase(rate_limit_hits_total[10m]) > 50
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Rate limit frequently exceeded"
+          description: "Rate limit hits increased by more than 50 in the last 10 minutes."
