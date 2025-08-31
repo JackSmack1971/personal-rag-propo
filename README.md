@@ -62,39 +62,39 @@ The **Personal RAG System** is an advanced retrieval-augmented generation platfo
 
 ```mermaid
 graph TB
-    subgraph "🎨 User Interface Layer"
-        UI[Gradio 5.x Web Interface<br/>📱 SSR + PWA Support<br/>🔐 Authentication]
-        API[Health & Metrics API<br/>⚡ Port 8000<br/>📊 Performance Monitoring]
+    subgraph UI_Layer["🎨 User Interface Layer"]
+        UI[Gradio 5.x Web Interface<br/>SSR + PWA Support<br/>Authentication]
+        API[Health & Metrics API<br/>Port 8000<br/>Performance Monitoring]
     end
     
-    subgraph "🧠 Application Core"
-        APP[Main Application<br/>🎯 app.py<br/>🔧 Configuration Manager]
-        CONFIG[Enhanced Config<br/>📝 YAML + Environment<br/>🛡️ Security Settings]
-        AUTH[Security Layer<br/>🔑 JWT Authentication<br/>⏱️ Rate Limiting]
+    subgraph App_Core["🧠 Application Core"]
+        APP[Main Application<br/>app.py<br/>Configuration Manager]
+        CONFIG[Enhanced Config<br/>YAML + Environment<br/>Security Settings]
+        AUTH[Security Layer<br/>JWT Authentication<br/>Rate Limiting]
     end
     
-    subgraph "🔍 RAG Pipeline"
-        EMBED[Multi-Backend Embedder<br/>⚙️ torch/onnx/openvino<br/>🚀 4x Performance]
-        VECTOR[Vector Operations<br/>🔎 Query + Upsert<br/>📈 Dynamic Thresholds]
-        CONTEXT[Context Assembly<br/>🎯 Dynamic Filtering<br/>📚 Citation Tracking]
+    subgraph RAG_Pipeline["🔍 RAG Pipeline"]
+        EMBED[Multi-Backend Embedder<br/>torch/onnx/openvino<br/>4x Performance]
+        VECTOR[Vector Operations<br/>Query + Upsert<br/>Dynamic Thresholds]
+        CONTEXT[Context Assembly<br/>Dynamic Filtering<br/>Citation Tracking]
     end
     
-    subgraph "🎭 MoE Components"
-        ROUTER[Expert Router<br/>🧭 Centroid Management<br/>📊 Performance Tracking]
-        GATE[Selective Gate<br/>🎯 Adaptive K-Selection<br/>🔄 Dynamic Thresholds]
-        RERANK[Two-Stage Reranker<br/>🎯 Cross-Encoder + LLM<br/>📈 NDCG@10 ≈ 74.30]
+    subgraph MoE_Components["🎭 MoE Components"]
+        ROUTER[Expert Router<br/>Centroid Management<br/>Performance Tracking]
+        GATE[Selective Gate<br/>Adaptive K-Selection<br/>Dynamic Thresholds]
+        RERANK[Two-Stage Reranker<br/>Cross-Encoder + LLM<br/>NDCG@10 ≈ 74.30]
     end
     
-    subgraph "📄 Document Processing"
-        PARSE[Multi-Format Parser<br/>📑 PDF/TXT/MD Support<br/>🔍 Enhanced Security]
-        PROP[LLM Propositionizer<br/>🧩 Atomic Fact Extraction<br/>📖 Citation Mapping]
-        INGEST[Batch Ingestion<br/>📊 Progress Tracking<br/>⚡ Parallel Processing]
+    subgraph Doc_Processing["📄 Document Processing"]
+        PARSE[Multi-Format Parser<br/>PDF/TXT/MD Support<br/>Enhanced Security]
+        PROP[LLM Propositionizer<br/>Atomic Fact Extraction<br/>Citation Mapping]
+        INGEST[Batch Ingestion<br/>Progress Tracking<br/>Parallel Processing]
     end
     
-    subgraph "☁️ External Services"
-        PINECONE[(Pinecone Vector DB<br/>🚀 gRPC + Serverless<br/>🔄 Auto-scaling)]
-        OPENROUTER[OpenRouter API<br/>🤖 100+ LLM Models<br/>💰 Cost Optimization]
-        HF[HuggingFace Hub<br/>📦 Model Downloads<br/>🔄 Version Control]
+    subgraph External_Services["☁️ External Services"]
+        PINECONE[(Pinecone Vector DB<br/>gRPC + Serverless<br/>Auto-scaling)]
+        OPENROUTER[OpenRouter API<br/>100+ LLM Models<br/>Cost Optimization]
+        HF[HuggingFace Hub<br/>Model Downloads<br/>Version Control]
     end
     
     UI --> APP
@@ -120,9 +120,13 @@ graph TB
     EMBED --> HF
     
     style UI fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style "MoE Components" fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style "External Services" fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style "RAG Pipeline" fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    style API fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style ROUTER fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style GATE fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style RERANK fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style PINECONE fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style OPENROUTER fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style HF fill:#fff3e0,stroke:#e65100,stroke-width:2px
 ```
 
 ### Core Component Relationships
@@ -248,41 +252,41 @@ flowchart TD
     H --> I[Cost Tracking]
     I --> J[Final Answer]
     
-    style C fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#bbf,stroke:#333,stroke-width:2px
-    style J fill:#bfb,stroke:#333,stroke-width:2px
+    style C fill:#f9f9ff,stroke:#333,stroke-width:2px
+    style E fill:#bbf0ff,stroke:#333,stroke-width:2px
+    style J fill:#bfbfff,stroke:#333,stroke-width:2px
 ```
 
 ### Data Flow Architecture
 
 ```mermaid
 graph LR
-    subgraph "📄 Input Layer"
+    subgraph Input_Layer["📄 Input Layer"]
         DOC[Documents<br/>PDF, TXT, MD]
         QUERY[User Queries<br/>Natural Language]
     end
     
-    subgraph "🔄 Processing Layer"
+    subgraph Processing_Layer["🔄 Processing Layer"]
         PARSE[Parse & Extract<br/>Paragraphs + Metadata]
         PROP[Propositionize<br/>Atomic Facts]
         EMBED_DOC[Embed Documents<br/>Dense + Sparse]
         EMBED_Q[Embed Query<br/>Multi-Backend]
     end
     
-    subgraph "💾 Storage Layer"
+    subgraph Storage_Layer["💾 Storage Layer"]
         CACHE[Model Cache<br/>Performance Optimization]
         VECTOR_DB[(Vector Database<br/>Pinecone Serverless)]
         LOGS[(Logs & Metrics<br/>Performance Tracking)]
     end
     
-    subgraph "🧠 Intelligence Layer"
+    subgraph Intelligence_Layer["🧠 Intelligence Layer"]
         RETRIEVE[Vector Retrieval<br/>Similarity Search]
         MOE[MoE Processing<br/>Expert Routing]
         RERANK[Reranking<br/>Cross-Encoder]
         GENERATE[LLM Generation<br/>OpenRouter API]
     end
     
-    subgraph "📊 Output Layer"
+    subgraph Output_Layer["📊 Output Layer"]
         ANSWER[Final Answer<br/>With Citations]
         METRICS[Performance Metrics<br/>Cost Analysis]
     end
@@ -298,8 +302,10 @@ graph LR
     RERANK --> LOGS
     GENERATE --> METRICS
     
-    style "Intelligence Layer" fill:#e1f5fe
-    style "Output Layer" fill:#e8f5e8
+    style MOE fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style GENERATE fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style ANSWER fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    style METRICS fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 ```
 
 ---
