@@ -1,311 +1,323 @@
-# Personal RAG System 🤖📚
+# Personal RAG Proposition System 🤖📚
 
-<div align="center">
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Gradio 5.x](https://img.shields.io/badge/Gradio-5.x-orange.svg)](https://gradio.app/)
+[![Pinecone](https://img.shields.io/badge/Pinecone-7.x-green.svg)](https://www.pinecone.io/)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+[![Security](https://img.shields.io/badge/security-OWASP%20compliant-red.svg)]()
 
-### **Next-Generation Personal Knowledge Assistant with Advanced MoE Retrieval**
+> **Advanced Personal Knowledge Assistant with Mixture-of-Experts Retrieval**
 
-*Transform your documents into an intelligent, citation-accurate research companion powered by state-of-the-art AI*
-
-![Python](https://img.shields.io/badge/Python-3.11+-3776ab.svg?logo=python&logoColor=white)
-![Gradio](https://img.shields.io/badge/Gradio-5.42.0+-ff7c00.svg?logo=gradio&logoColor=white)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.8.0+-ee4c2c.svg?logo=pytorch&logoColor=white)
-![Pinecone](https://img.shields.io/badge/Pinecone-7.0.0+-00d4ff.svg)
-![Sentence Transformers](https://img.shields.io/badge/SentenceTransformers-5.1.0+-1f77b4.svg)
-
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)]()
-[![Version](https://img.shields.io/badge/Version-2025.1-blue.svg)]()
-[![Security](https://img.shields.io/badge/Security-Enhanced-orange.svg)]()
-
-[🚀 Quick Start](#-installation-guide) • [📖 Documentation](#-usage-instructions) • [🏗 Architecture](#-visual-architecture-overview) • [💡 Features](#-key-features) • [🛠 Development](#-development-guide)
-
-</div>
+A production-ready, local-first retrieval-augmented generation (RAG) system that transforms your personal documents into an intelligent, citation-precise chatbot. Built with cutting-edge 2025 technology stack featuring advanced proposition extraction, multi-backend embeddings, and optional Mixture-of-Experts architecture.
 
 ---
 
-## 🎯 Quick Reference
+## 🚀 Quick Start
 
-The **Personal RAG System** is an advanced retrieval-augmented generation platform that transforms your personal documents into an intelligent, searchable knowledge base. Built with the latest 2025 technology stack, it combines cutting-edge AI models with production-ready infrastructure to deliver precise, citation-backed answers from your document collection.
+**Get up and running in under 5 minutes:**
 
-### ✨ Key Features
+```bash
+# 1. Clone and setup
+git clone https://github.com/JackSmack1971/personal-rag-propo.git
+cd personal-rag-propo
+python -m venv venv && source venv/bin/activate  # Windows: .\venv\Scripts\activate
 
-- **🧠 Advanced Document Intelligence**: Extracts atomic propositions from PDFs, TXT, and Markdown files using LLM-powered analysis
-- **🔍 Hybrid Retrieval System**: Combines dense embeddings, sparse encoding, and Mixture of Experts (MoE) architecture for superior accuracy  
-- **⚡ Performance Optimized**: Multi-backend support (torch/onnx/openvino) with 4x performance improvements and intelligent caching
-- **🎨 Modern Web Interface**: Production-ready Gradio 5.x UI with SSR, PWA support, and mobile optimization
-- **💰 Cost Intelligence**: Real-time LLM cost monitoring with predictive analysis and automated alerts
-- **🔒 Enterprise Security**: Authentication, rate limiting, SSL/HTTPS, and comprehensive security logging
-- **📊 Advanced Analytics**: Comprehensive evaluation metrics including Hit@k, nDCG@k, and A/B testing capabilities
+# 2. Install dependencies
+pip install -r requirements-2025.txt
 
-### 🛠 Technology Stack
+# 3. Configure environment
+cp .env.example .env
+# Edit .env with your OpenRouter and Pinecone API keys
 
-| Component | Version | Purpose | Performance Boost |
-|-----------|---------|---------|------------------|
-| **Frontend** | Gradio 5.42.0+ | Production web UI with SSR | 60-80% faster loading |
-| **Vector DB** | Pinecone 7.0.0+ | Serverless vector storage | gRPC performance gains |
-| **Embeddings** | Sentence-Transformers 5.1.0+ | Multi-backend encoding | 4x inference speedup |
-| **ML Runtime** | PyTorch 2.8.0+ | Enhanced model inference | FP16 CPU optimizations |
-| **Document Parser** | pypdf 6.0.0+ | Modern PDF processing | Enhanced security |
-| **LLM Provider** | OpenRouter API | 100+ language models | Rate limiting & credits |
+# 4. Launch application
+python app.py
+```
 
-### 🎪 Live Demo
-
-- **Main Application**: http://localhost:7860 (after setup)
-- **Health Monitoring**: http://localhost:8000/health
-- **Performance Metrics**: http://localhost:8000/metrics
+**📖 [Jump to Installation Guide](#-installation-guide) for detailed setup instructions**
 
 ---
 
-## 🏗 Visual Architecture Overview
+## 🎯 Core Features
 
-### System Architecture
+### **🔥 2025 Enhanced Features**
+- **⚡ 4x Performance Boost**: OpenVINO quantization with multi-backend support (torch/onnx/openvino)
+- **🧠 Advanced MoE Architecture**: Mixture-of-Experts retrieval with intelligent routing and reranking
+- **🛡️ Enterprise Security**: RAG poisoning detection, OWASP LLM Top 10 compliance, comprehensive threat modeling
+- **📱 Modern PWA Interface**: Gradio 5.x with SSR, mobile optimization, and production-ready deployment
+- **📊 Real-time Analytics**: Cost monitoring, performance tracking, and A/B testing capabilities
+
+### **📚 Intelligent Document Processing**
+- **Multi-format Support**: PDF, TXT, MD with advanced parsing and error recovery
+- **Atomic Proposition Extraction**: LLM-powered breakdown of complex documents into verifiable facts
+- **Precision Citations**: Character-level source attribution with confidence scoring
+- **Batch Processing**: Efficient handling of large document collections
+
+### **🔍 Advanced Retrieval System**
+- **Hybrid Search**: Dense + sparse embeddings for superior recall and precision
+- **Dynamic Thresholding**: Adaptive similarity scoring based on query complexity
+- **Multi-stage Reranking**: Cross-encoder refinement for optimal result ordering
+- **Contextual Filtering**: Intelligent context composition with relevance optimization
+
+---
+
+## 🏗️ System Architecture
+
+### High-Level Architecture Overview
 
 ```mermaid
 graph TB
-    subgraph UI_Layer["🎨 User Interface Layer"]
-        UI[Gradio 5.x Web Interface<br/>SSR + PWA Support<br/>Authentication]
-        API[Health & Metrics API<br/>Port 8000<br/>Performance Monitoring]
+    subgraph "Client Layer"
+        UI[Gradio 5.x PWA Interface]
+        API[REST API Endpoints]
     end
     
-    subgraph App_Core["🧠 Application Core"]
-        APP[Main Application<br/>app.py<br/>Configuration Manager]
-        CONFIG[Enhanced Config<br/>YAML + Environment<br/>Security Settings]
-        AUTH[Security Layer<br/>JWT Authentication<br/>Rate Limiting]
+    subgraph "Application Core"
+        CONFIG[Enhanced Config Manager]
+        INGEST[Document Ingestion Engine]
+        RAG[RAG Processing Pipeline]
+        MONITOR[Real-time Monitoring]
     end
     
-    subgraph RAG_Pipeline["🔍 RAG Pipeline"]
-        EMBED[Multi-Backend Embedder<br/>torch/onnx/openvino<br/>4x Performance]
-        VECTOR[Vector Operations<br/>Query + Upsert<br/>Dynamic Thresholds]
-        CONTEXT[Context Assembly<br/>Dynamic Filtering<br/>Citation Tracking]
+    subgraph "Document Processing"
+        PARSER[Multi-format Parser]
+        PROP[Proposition Extractor]
+        EMBED[Multi-backend Embeddings]
+        SECURITY[Security Validator]
     end
     
-    subgraph MoE_Components["🎭 MoE Components"]
-        ROUTER[Expert Router<br/>Centroid Management<br/>Performance Tracking]
-        GATE[Selective Gate<br/>Adaptive K-Selection<br/>Dynamic Thresholds]
-        RERANK[Two-Stage Reranker<br/>Cross-Encoder + LLM<br/>NDCG@10 ≈ 74.30]
+    subgraph "MoE Architecture" 
+        ROUTER[Expert Router]
+        GATE[Selective Gate]
+        RERANK[Two-stage Reranker]
+        EVAL[Performance Monitor]
     end
     
-    subgraph Doc_Processing["📄 Document Processing"]
-        PARSE[Multi-Format Parser<br/>PDF/TXT/MD Support<br/>Enhanced Security]
-        PROP[LLM Propositionizer<br/>Atomic Fact Extraction<br/>Citation Mapping]
-        INGEST[Batch Ingestion<br/>Progress Tracking<br/>Parallel Processing]
+    subgraph "Data Layer"
+        PINECONE[(Pinecone Vector DB)]
+        CACHE[(Redis Cache)]
+        LOGS[(Monitoring Logs)]
     end
     
-    subgraph External_Services["☁️ External Services"]
-        PINECONE[(Pinecone Vector DB<br/>gRPC + Serverless<br/>Auto-scaling)]
-        OPENROUTER[OpenRouter API<br/>100+ LLM Models<br/>Cost Optimization]
-        HF[HuggingFace Hub<br/>Model Downloads<br/>Version Control]
+    subgraph "External Services"
+        OPENROUTER[OpenRouter API]
+        LLM[Language Models]
     end
     
-    UI --> APP
-    API --> APP
-    APP --> CONFIG
-    APP --> AUTH
-    APP --> EMBED
-    EMBED --> VECTOR
-    VECTOR --> CONTEXT
-    
-    VECTOR --> ROUTER
-    ROUTER --> GATE  
+    UI --> RAG
+    API --> RAG
+    RAG --> INGEST
+    RAG --> EMBED
+    INGEST --> PARSER
+    PARSER --> PROP
+    PROP --> EMBED
+    EMBED --> PINECONE
+    RAG --> ROUTER
+    ROUTER --> GATE
     GATE --> RERANK
-    RERANK --> CONTEXT
+    RAG --> OPENROUTER
+    OPENROUTER --> LLM
+    MONITOR --> LOGS
+    EMBED --> CACHE
+    SECURITY --> MONITOR
     
-    APP --> PARSE
-    PARSE --> PROP
-    PROP --> INGEST
-    INGEST --> VECTOR
-    
-    VECTOR <--> PINECONE
-    CONTEXT --> OPENROUTER
-    EMBED --> HF
-    
-    style UI fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style API fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style ROUTER fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style GATE fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style RERANK fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style PINECONE fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style OPENROUTER fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style HF fill:#fff3e0,stroke:#e65100,stroke-width:2px
-```
-
-### Core Component Relationships
-
-```mermaid
-classDiagram
-    class Config {
-        +str EMBED_MODEL
-        +str PINECONE_INDEX
-        +int TOP_K
-        +bool MOE_ENABLED
-        +SecurityConfig security
-        +MoEConfig moe_config
-        +load_from_yaml()
-        +validate_settings()
-    }
-    
-    class EmbeddingService {
-        +SentenceTransformer model
-        +str backend_type
-        +Dict cache
-        +encode(texts: List[str])
-        +encode_optimized(sentences)
-        +warm_up_model()
-    }
-    
-    class VectorStore {
-        +Pinecone client
-        +str index_name
-        +upsert_vectors(vectors)
-        +query_similar(query_vector)
-        +delete_vectors(ids)
-    }
-    
-    class MoEPipeline {
-        +ExpertRouter router
-        +SelectiveGate gate
-        +TwoStageReranker reranker
-        +process_query(query)
-        +route_to_experts()
-    }
-    
-    class DocumentProcessor {
-        +List parsers
-        +LLMPropositionizer propositionizer
-        +parse_document(file_path)
-        +extract_propositions(paragraphs)
-        +create_citations()
-    }
-    
-    class RAGOrchestrator {
-        +EmbeddingService embedder
-        +VectorStore vector_store
-        +MoEPipeline moe_pipeline
-        +OpenRouterClient llm_client
-        +answer_query(question)
-        +assemble_context()
-    }
-    
-    Config --> EmbeddingService
-    Config --> VectorStore
-    Config --> MoEPipeline
-    EmbeddingService --> VectorStore
-    VectorStore --> RAGOrchestrator
-    MoEPipeline --> RAGOrchestrator
-    DocumentProcessor --> VectorStore
-    RAGOrchestrator --> Config
+    style UI fill:#e1f5fe
+    style RAG fill:#f3e5f5
+    style MoE fill:#fff3e0
+    style PINECONE fill:#e8f5e8
+    style OPENROUTER fill:#fce4ec
 ```
 
 ### Document Ingestion Flow
 
 ```mermaid
-sequenceDiagram
-    participant User
-    participant UI as Gradio UI
-    participant Parser as Document Parser
-    participant Prop as Propositionizer
-    participant Embed as Embedding Service
-    participant Vector as Vector Store
-    participant Monitor as Performance Monitor
+flowchart TD
+    START([Document Upload]) --> VALIDATE{Security Validation}
+    VALIDATE -->|✓ Safe| PARSE[Multi-format Parser]
+    VALIDATE -->|✗ Threat Detected| BLOCK[Block & Alert]
     
-    User->>UI: Upload Document (PDF/TXT/MD)
-    UI->>Parser: parse_document(file_path)
-    Parser->>Parser: Extract paragraphs & metadata
-    Parser->>Prop: propositionize_paragraphs(paragraphs)
+    PARSE --> EXTRACT[Extract Text Content]
+    EXTRACT --> CLEAN[Clean & Normalize]
+    CLEAN --> CHUNK[Intelligent Chunking]
+    CHUNK --> PROP[LLM Proposition Extraction]
     
-    Note over Prop: LLM extracts atomic propositions<br/>with citation spans
+    PROP --> EMBED[Generate Embeddings]
+    EMBED --> BACKEND{Backend Selection}
+    BACKEND -->|CPU| OPENVINO[OpenVINO Quantized]
+    BACKEND -->|GPU| TORCH[PyTorch CUDA]
+    BACKEND -->|Balanced| ONNX[ONNX Runtime]
     
-    Prop-->>Parser: propositions + citations
-    Parser->>Embed: encode_batch(propositions)
+    OPENVINO --> VECTORIZE[Create Vectors]
+    TORCH --> VECTORIZE
+    ONNX --> VECTORIZE
     
-    Note over Embed: Multi-backend encoding<br/>(torch/onnx/openvino)
+    VECTORIZE --> METADATA[Enrich Metadata]
+    METADATA --> UPSERT[Pinecone Upsert]
+    UPSERT --> INDEX[(Vector Index)]
+    INDEX --> SUCCESS([✓ Document Indexed])
     
-    Embed-->>Parser: embeddings (384-dim vectors)
-    Parser->>Vector: upsert_vectors(embeddings + metadata)
-    Vector->>Monitor: log_performance_metrics()
-    Vector-->>UI: ingestion_complete(stats)
-    UI-->>User: ✅ Document processed successfully
+    BLOCK --> FAIL([✗ Processing Failed])
+    
+    style START fill:#4caf50
+    style SUCCESS fill:#4caf50
+    style FAIL fill:#f44336
+    style PROP fill:#ff9800
+    style EMBED fill:#2196f3
 ```
 
-### Query Processing Pipeline
+### RAG Query Processing Pipeline
 
 ```mermaid
-flowchart TD
-    A[User Query] --> B{MoE Enabled?}
-    B -->|Yes| C[MoE Pipeline]
-    B -->|No| D[Standard RAG]
+sequenceDiagram
+    participant User
+    participant UI as Gradio Interface
+    participant RAG as RAG Engine
+    participant MoE as MoE Router
+    participant Embed as Embedding Service
+    participant PC as Pinecone
+    participant OR as OpenRouter
+    participant Monitor as Cost Monitor
     
-    C --> C1[Expert Router]
-    C1 --> C2[Selective Gate]
-    C2 --> C3[Retrieve Top-K]
-    C3 --> C4[Two-Stage Rerank]
-    C4 --> E[Context Assembly]
+    User->>UI: Submit Query
+    UI->>RAG: Process Query Request
+    RAG->>Monitor: Log Request Start
     
-    D --> D1[Embed Query]
-    D1 --> D2[Vector Search]
-    D2 --> D3[Score Filtering]
-    D3 --> E
+    RAG->>Embed: Generate Query Embedding
+    Embed->>Embed: Select Optimal Backend
+    Embed-->>RAG: Query Vector + Sparse Features
     
-    E --> F[LLM Generation]
-    F --> G[Citation Extraction]
-    G --> H[Response Assembly]
-    H --> I[Cost Tracking]
-    I --> J[Final Answer]
+    alt MoE Enabled
+        RAG->>MoE: Route Query to Experts
+        MoE->>PC: Multi-expert Retrieval
+        PC-->>MoE: Expert Results
+        MoE->>MoE: Two-stage Reranking
+        MoE-->>RAG: Optimized Results
+    else Standard Retrieval
+        RAG->>PC: Vector Similarity Search
+        PC-->>RAG: Raw Results
+    end
     
-    style C fill:#f9f9ff,stroke:#333,stroke-width:2px
-    style E fill:#bbf0ff,stroke:#333,stroke-width:2px
-    style J fill:#bfbfff,stroke:#333,stroke-width:2px
+    RAG->>RAG: Context Composition
+    RAG->>OR: Generate Response
+    OR-->>RAG: LLM Response + Usage
+    
+    RAG->>Monitor: Log Costs & Metrics
+    RAG-->>UI: Formatted Response + Citations
+    UI-->>User: Display Answer
+    
+    Note over Monitor: Real-time cost tracking<br/>Performance analytics<br/>Usage optimization
 ```
 
-### Data Flow Architecture
+### MoE Architecture Details
+
+```mermaid
+classDiagram
+    class ExpertRouter {
+        +centroids: Dict[str, np.ndarray]
+        +refresh_interval: int
+        +route(query_vector) List[str]
+        +update_centroids() void
+        +calculate_similarity(vector, centroid) float
+    }
+    
+    class SelectiveGate {
+        +retrieve_threshold: float
+        +low_sim_threshold: float
+        +adaptive_k: bool
+        +should_retrieve(similarity) bool
+        +adapt_k_value(query_complexity) int
+        +gate_results(results, query) List
+    }
+    
+    class TwoStageReranker {
+        +cross_encoder_model: str
+        +rerank_top_k: int
+        +fusion_method: str
+        +first_stage_rerank(results) List
+        +cross_encoder_rerank(query, results) List
+        +fuse_scores(dense_scores, cross_scores) List
+    }
+    
+    class MoEEvaluator {
+        +metrics: Dict
+        +ab_test_active: bool
+        +evaluate_retrieval(query, results) Metrics
+        +run_ab_test(control, treatment) Results
+        +calculate_ndcg(results, relevance) float
+    }
+    
+    class MoEConfig {
+        +enabled: bool
+        +experts: List[str]
+        +router_config: RouterConfig
+        +gate_config: GateConfig
+        +rerank_config: RerankConfig
+    }
+    
+    ExpertRouter --> MoEConfig
+    SelectiveGate --> MoEConfig
+    TwoStageReranker --> MoEConfig
+    MoEEvaluator --> ExpertRouter
+    MoEEvaluator --> SelectiveGate
+    MoEEvaluator --> TwoStageReranker
+```
+
+### Component Interaction Map
 
 ```mermaid
 graph LR
-    subgraph Input_Layer["📄 Input Layer"]
-        DOC[Documents<br/>PDF, TXT, MD]
-        QUERY[User Queries<br/>Natural Language]
+    subgraph "Configuration Layer"
+        CONFIG[Config Manager]
+        ENV[Environment Variables]
+        YAML[YAML Configuration]
     end
     
-    subgraph Processing_Layer["🔄 Processing Layer"]
-        PARSE[Parse & Extract<br/>Paragraphs + Metadata]
-        PROP[Propositionize<br/>Atomic Facts]
-        EMBED_DOC[Embed Documents<br/>Dense + Sparse]
-        EMBED_Q[Embed Query<br/>Multi-Backend]
+    subgraph "Processing Components"
+        PARSE[Document Parsers]
+        PROP[Propositionizer]
+        EMBED[Embedding Engine]
+        VECTOR[Vector Store]
     end
     
-    subgraph Storage_Layer["💾 Storage Layer"]
-        CACHE[Model Cache<br/>Performance Optimization]
-        VECTOR_DB[(Vector Database<br/>Pinecone Serverless)]
-        LOGS[(Logs & Metrics<br/>Performance Tracking)]
+    subgraph "Intelligence Layer"
+        ROUTER[Expert Router]
+        GATE[Selective Gate] 
+        RERANK[Reranker]
+        CACHE[Smart Cache]
     end
     
-    subgraph Intelligence_Layer["🧠 Intelligence Layer"]
-        RETRIEVE[Vector Retrieval<br/>Similarity Search]
-        MOE[MoE Processing<br/>Expert Routing]
-        RERANK[Reranking<br/>Cross-Encoder]
-        GENERATE[LLM Generation<br/>OpenRouter API]
+    subgraph "Interface & Monitoring"
+        UI[Gradio Interface]
+        API[REST API]
+        MONITOR[Monitoring System]
+        SECURITY[Security Layer]
     end
     
-    subgraph Output_Layer["📊 Output Layer"]
-        ANSWER[Final Answer<br/>With Citations]
-        METRICS[Performance Metrics<br/>Cost Analysis]
-    end
+    CONFIG --> PARSE
+    CONFIG --> EMBED
+    CONFIG --> UI
+    ENV --> CONFIG
+    YAML --> CONFIG
     
-    DOC --> PARSE --> PROP --> EMBED_DOC --> VECTOR_DB
-    QUERY --> EMBED_Q --> RETRIEVE
-    EMBED_DOC --> CACHE
-    EMBED_Q --> CACHE
+    PARSE --> PROP
+    PROP --> EMBED
+    EMBED --> VECTOR
+    EMBED --> CACHE
     
-    RETRIEVE --> MOE --> RERANK --> GENERATE
-    VECTOR_DB --> RETRIEVE
-    GENERATE --> ANSWER
-    RERANK --> LOGS
-    GENERATE --> METRICS
+    VECTOR --> ROUTER
+    ROUTER --> GATE
+    GATE --> RERANK
+    CACHE --> ROUTER
     
-    style MOE fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style GENERATE fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style ANSWER fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    style METRICS fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    UI --> SECURITY
+    API --> SECURITY
+    SECURITY --> MONITOR
+    MONITOR --> CACHE
+    
+    style CONFIG fill:#e3f2fd
+    style ROUTER fill:#fff3e0
+    style UI fill:#f3e5f5
+    style SECURITY fill:#ffebee
 ```
 
 ---
@@ -314,22 +326,22 @@ graph LR
 
 ### Prerequisites
 
-Ensure your system meets these requirements before installation:
+Before installation, ensure your system meets these requirements:
 
 | Requirement | Minimum | Recommended | Notes |
 |-------------|---------|-------------|--------|
-| **Python** | 3.10+ | 3.11+ | Enhanced type hints & performance |
-| **RAM** | 8GB | 16GB+ | 20% increase with MoE architecture |
-| **Storage** | 10GB | 20GB+ | Model cache & document storage |
-| **CPU** | 4 cores | 8+ cores | Multi-backend processing support |
-| **GPU** | Optional | RTX 3060+ | 4x performance with OpenVINO |
+| **Python** | 3.10+ | 3.11+ | Type hints and performance optimizations |
+| **RAM** | 8GB | 16GB | 20% increase with MoE architecture |
+| **Storage** | 10GB | 20GB | Model cache and document storage |
+| **CPU** | 4 cores | 8 cores | Multi-backend processing support |
+| **GPU** | Optional | RTX 3060+ | 4x performance improvement with OpenVINO |
 
 ### Required API Keys
 
 You'll need accounts and API keys for:
 
-- **[OpenRouter](https://openrouter.ai/)**: Access to 100+ language models ($5 minimum credit)
-- **[Pinecone](https://www.pinecone.io/)**: Serverless vector database (free tier available)
+- **[OpenRouter](https://openrouter.ai/)**: Access to 100+ language models
+- **[Pinecone](https://www.pinecone.io/)**: Serverless vector database
 
 ### Step-by-Step Installation
 
@@ -343,27 +355,21 @@ cd personal-rag-propo
 #### 2. Create Virtual Environment
 
 <details>
-<summary>🪟 Windows (PowerShell)</summary>
+<summary>Windows (PowerShell)</summary>
 
 ```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
-
-# If you encounter execution policy issues
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
 </details>
 
 <details>
-<summary>🍎 macOS/Linux</summary>
+<summary>macOS/Linux</summary>
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-
-# Verify activation
-which python  # Should point to venv/bin/python
 ```
 
 </details>
@@ -371,13 +377,11 @@ which python  # Should point to venv/bin/python
 #### 3. Install Dependencies
 
 ```bash
-# Upgrade pip for enhanced dependency resolution
-pip install --upgrade pip
-
 # Install 2025 enhanced dependencies
+pip install --upgrade pip
 pip install -r requirements-2025.txt
 
-# Optional: Install development dependencies  
+# Optional: Install development dependencies
 pip install -r requirements-dev.txt
 ```
 
@@ -388,308 +392,173 @@ pip install -r requirements-dev.txt
 cp .env.example .env
 
 # Edit configuration file
-nano .env  # or code .env for VS Code
+nano .env  # or your preferred editor
 ```
 
 **Required Environment Variables:**
 
 ```env
-# ============= API Keys (Required) =============
+# API Keys (Required)
 OPENROUTER_API_KEY=your_openrouter_api_key_here
 PINECONE_API_KEY=your_pinecone_api_key_here
 
-# ============= Core Configuration =============
+# Core Configuration
 PINECONE_INDEX=personal-rag
 EMBED_MODEL=BAAI/bge-small-en-v1.5
 NAMESPACE=default
 TOP_K=6
 
-# ============= 2025 Stack Features =============
+# 2025 Stack Features
 GRADIO_SSR_ENABLED=true
 PINECONE_GRPC_ENABLED=true
 SENTENCE_TRANSFORMERS_BACKEND=torch
 
-# ============= Security Settings =============
-GRADIO_AUTH_ENABLED=false
-GRADIO_AUTH_USER=admin
-GRADIO_AUTH_PASS=secure_password_here
-
-# ============= Performance Tuning =============
-ENABLE_MODEL_CACHING=true
-CACHE_TTL_SECONDS=3600
-MAX_BATCH_SIZE=32
-
-# ============= Advanced Features =============
-MOE_ENABLED=false  # Set to true for enhanced retrieval
-COST_MONITORING_ENABLED=true
-PERFORMANCE_LOGGING=true
+# Optional: MoE Architecture
+MOE_ENABLED=false  # Set to true to enable advanced retrieval
 ```
 
 #### 5. Initialize Pinecone Index
+
+The application will automatically create the required Pinecone index on first run, but you can manually initialize it:
 
 ```bash
 python -c "
 from src.config import Config
 from src.vectorstore import ensure_index_exists
-
-try:
-    cfg = Config()
-    ensure_index_exists(cfg, dim=384)
-    print('✅ Pinecone index initialized successfully')
-    print(f'   Index: {cfg.PINECONE_INDEX}')
-    print(f'   Dimension: 384')
-except Exception as e:
-    print(f'❌ Initialization failed: {e}')
+cfg = Config()
+ensure_index_exists(cfg, dim=384)
+print('✅ Pinecone index initialized successfully')
 "
 ```
 
-#### 6. Verify Installation
+#### 6. Launch Application
 
 ```bash
-# Run comprehensive system health check
-python -c "
-import sys
-print(f'✅ Python {sys.version}')
-
-# Test core imports
-try:
-    from src.config import Config
-    from src.embeddings import get_embedder  
-    from src.vectorstore import VectorStore
-    print('✅ All core modules imported successfully')
-except ImportError as e:
-    print(f'❌ Import failed: {e}')
-    exit(1)
-
-# Test configuration
-try:
-    cfg = Config()
-    print(f'✅ Configuration loaded: {cfg.EMBED_MODEL}')
-    print(f'   MoE Enabled: {cfg.MOE_ENABLED}')
-    print(f'   Security: {\"Enabled\" if cfg.GRADIO_AUTH_ENABLED else \"Disabled\"}')
-except Exception as e:
-    print(f'❌ Configuration failed: {e}')
-    exit(1)
-
-# Test embedder (downloads model on first run)
-try:
-    embedder = get_embedder(cfg.EMBED_MODEL)
-    test_embedding = embedder.encode('Hello, world!')
-    print(f'✅ Embedder functional: {test_embedding.shape}')
-    print('✅ Installation verification complete!')
-except Exception as e:
-    print(f'❌ Embedder test failed: {e}')
-"
-```
-
-Expected output:
-```
-✅ Python 3.11.x
-✅ All core modules imported successfully
-✅ Configuration loaded: BAAI/bge-small-en-v1.5
-   MoE Enabled: false
-   Security: Disabled
-✅ Embedder functional: (384,)
-✅ Installation verification complete!
-```
-
-#### 7. Launch Application
-
-```bash
-# Start the enhanced Gradio interface
+# Start the application
 python app.py
+
+# Alternative: Launch with specific configuration
+python app.py --config config/production.yaml
 ```
 
-**Access Points:**
-- **🎨 Main Application**: http://localhost:7860
-- **❤️ Health Check**: http://localhost:8000/health  
-- **📊 Performance Metrics**: http://localhost:8000/metrics
+The application will be available at `http://localhost:7860`
 
-### 🚨 Troubleshooting Installation Issues
+### Verification Steps
 
-<details>
-<summary>🔧 Common Issues and Solutions</summary>
-
-**Dependencies Installation Failed**
-```bash
-# Clear pip cache and reinstall
-pip cache purge
-pip install --no-cache-dir -r requirements-2025.txt
-
-# If specific package fails
-pip install --no-deps package_name
-```
-
-**CUDA/GPU Issues**
-```bash
-# Install CPU-only PyTorch if GPU issues persist
-pip uninstall torch torchvision torchaudio
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-```
-
-**Port Already in Use**
-```bash
-# Change default ports in .env
-GRADIO_SERVER_PORT=7861
-HEALTH_CHECK_PORT=8001
-
-# Or find and kill existing process
-lsof -ti:7860 | xargs kill -9  # macOS/Linux
-netstat -ano | findstr :7860  # Windows
-```
-
-**API Key Issues**  
-- Verify API keys are active with sufficient credits
-- Check for extra spaces or hidden characters in `.env`
-- Test API keys independently:
-```bash
-curl -H "Authorization: Bearer YOUR_OPENROUTER_KEY" https://openrouter.ai/api/v1/models
-```
-
-**Memory Issues**
-```bash
-# Reduce batch size in .env
-MAX_BATCH_SIZE=16
-
-# Enable model caching optimization
-ENABLE_MODEL_CACHING=true
-```
-
-</details>
+1. **✅ Basic Functionality**: Upload a test document and ask a question
+2. **✅ API Connectivity**: Verify OpenRouter and Pinecone connections in logs
+3. **✅ Performance**: Check embedding generation and retrieval speed
+4. **✅ Security**: Confirm security validation is active
 
 ---
 
-## 🚀 Usage Instructions
+## 💻 Usage Guide
 
-### Basic Document Processing
+### Web Interface
 
-#### Upload Documents via Web Interface
+#### Document Management Tab
 
-1. **Start the Application**
-   ```bash
-   python app.py
-   ```
+1. **Upload Documents**: Drag and drop PDF/TXT/MD files
+2. **Monitor Processing**: Real-time progress with detailed status
+3. **Review Extractions**: Inspect extracted propositions
+4. **Manage Index**: View indexed documents and statistics
 
-2. **Access the Interface** 
-   - Navigate to http://localhost:7860
-   - The modern Gradio 5.x interface will load with SSR optimization
+#### Chat Interface Tab
 
-3. **Upload Documents**
-   - Click the "📄 Document Upload" tab
-   - Drag & drop or select files (PDF, TXT, MD)
-   - Maximum: 10MB per file, supports batch uploads
+1. **Ask Questions**: Natural language queries about your documents
+2. **Review Responses**: Comprehensive answers with precise citations
+3. **Explore Sources**: Click citations to view original context
+4. **Export Conversations**: Save chat history in multiple formats
 
-4. **Monitor Processing**
-   - Real-time progress bars show ingestion status
-   - Proposition extraction and embedding progress
-   - Final statistics display (documents processed, propositions extracted)
+#### Advanced Configuration Tab
 
-5. **Start Querying**
-   - Switch to "💬 Chat" tab
-   - Ask questions about your uploaded documents
-   - Receive answers with precise citations and source references
+1. **Model Selection**: Choose embedding and LLM models
+2. **Performance Tuning**: Adjust retrieval parameters
+3. **MoE Settings**: Configure expert routing and reranking
+4. **Security Options**: Enable threat detection and monitoring
 
-#### Command Line Document Ingestion
+### Programmatic Usage
 
-For batch processing or automation:
+#### Basic RAG Pipeline
 
-```bash
-# Ingest single document
-python -c "
-from src.ingest import ingest_files
-from src.config import Config
-from src.embeddings import get_embedder
-from pathlib import Path
-
-cfg = Config()
-embedder = get_embedder(cfg.EMBED_MODEL)
-files = [Path('your_document.pdf')]
-report = ingest_files(cfg, embedder, files, 'default')
-print(f'Processed: {report}')
-"
-
-# Batch ingest directory
-python scripts/batch_ingest.py --directory ./documents --namespace research_papers
-```
-
-### Advanced Query Techniques
-
-#### Using MoE Enhanced Retrieval
-
-Enable Mixture of Experts for improved accuracy:
-
-```bash
-# Enable in .env file
-MOE_ENABLED=true
-MOE_NUM_EXPERTS=4
-MOE_RERANK_TOP_K=20
-```
-
-**Query Examples:**
-- **Factual Questions**: "What are the key findings of the 2023 climate report?"
-- **Comparative Analysis**: "Compare the methodologies used in papers A and B"  
-- **Citation Hunting**: "Find all references to machine learning in my documents"
-- **Summarization**: "Summarize the main arguments across all uploaded papers"
-
-#### Cost Estimation & Monitoring
-
-1. Navigate to "💰 Cost Estimation" tab
-2. Input expected monthly usage:
-   - **Monthly Queries**: Number of questions you plan to ask
-   - **Average Prompt Tokens**: Typical context size (default: 2000)
-   - **Average Completion Tokens**: Expected response length (default: 500)
-3. Get real-time cost projections with breakdown by model
-
-#### Performance Optimization
-
-**Caching Configuration**
 ```python
-# Configure in Python or via environment
 from src.config import Config
+from src.rag import RAGPipeline
+from src.ingest import DocumentIngestor
 
+# Initialize components
 config = Config()
+rag = RAGPipeline(config)
+ingestor = DocumentIngestor(config)
+
+# Ingest documents
+documents = ["path/to/document1.pdf", "path/to/document2.txt"]
+for doc_path in documents:
+    result = ingestor.ingest_file(doc_path)
+    print(f"✅ Ingested: {result.document_id}")
+
+# Ask questions
+query = "What are the key findings about machine learning?"
+response = rag.answer_question(query)
+
+print(f"Answer: {response.answer}")
+print(f"Sources: {[s.source for s in response.citations]}")
+```
+
+#### Advanced MoE Configuration
+
+```python
+from src.config import Config, MoEConfig
+from src.moe.router import ExpertRouter
+from src.moe.gate import SelectiveGate
+
+# Configure MoE architecture
+moe_config = MoEConfig(
+    enabled=True,
+    experts=["technical", "general", "personal"],
+    router_config={
+        "centroid_refresh_interval": 3600,
+        "similarity_threshold": 0.7
+    },
+    gate_config={
+        "retrieve_threshold": 0.62,
+        "adaptive_k": True
+    }
+)
+
+config = Config(moe=moe_config)
+rag = RAGPipeline(config)
+
+# MoE-enhanced retrieval
+query = "Explain quantum computing applications"
+response = rag.answer_question(query, use_moe=True)
+```
+
+### Cost Management
+
+#### Monitor Usage and Costs
+
+1. Navigate to "Cost Estimation" tab
+2. Input expected monthly queries
+3. Adjust token usage parameters
+4. Get projected monthly costs with breakdown
+
+#### Optimize Performance and Costs
+
+```python
+# Configure model and result caching
 config.ENABLE_MODEL_CACHING = True
-config.CACHE_TTL_SECONDS = 3600  # 1 hour cache
+config.ENABLE_RESULT_CACHING = True
+config.CACHE_TTL_SECONDS = 3600
 
-# Clear caches when needed
-from src.cache import clear_all_caches
-clear_all_caches()
-```
+# Use cost-efficient models
+config.EMBED_MODEL = "BAAI/bge-small-en-v1.5"  # Fast and cost-effective
+config.LLM_MODEL = "openrouter/auto"  # Auto-select optimal model
 
-**Batch Processing for Large Collections**
-```python
+# Batch processing for large collections
 from src.batch_processing import BatchProcessor
-
 processor = BatchProcessor(config)
-results = processor.process_directory(
-    directory_path="documents/", 
-    batch_size=10,
-    parallel_workers=4
-)
-```
-
-### API Usage (Advanced)
-
-For integration with other applications:
-
-```python
-from src.rag import RAGOrchestrator
-from src.config import Config
-
-# Initialize RAG system
-config = Config()
-rag = RAGOrchestrator(config)
-
-# Process query
-result = rag.answer_query(
-    question="What are the benefits of renewable energy?",
-    namespace="research_papers",
-    include_citations=True
-)
-
-print(f"Answer: {result.answer}")
-print(f"Citations: {result.citations}")
-print(f"Cost: ${result.cost_info.total_cost:.4f}")
+results = processor.process_directory("documents/", batch_size=10)
 ```
 
 ---
@@ -698,506 +567,659 @@ print(f"Cost: ${result.cost_info.total_cost:.4f}")
 
 ```
 personal-rag-propo/
-├── 📄 app.py                          # 🎯 Main Gradio application entry point
-├── 📄 requirements-2025.txt           # 📦 Enhanced dependency specifications
-├── 📄 .env.example                    # ⚙️ Environment configuration template
-├── 📄 README.md                       # 📚 This comprehensive documentation
-├── 📄 LICENSE                         # ⚖️ MIT License
-├── 📄 CONTRIBUTING.md                 # 🤝 Contribution guidelines
+├── 📄 app.py                          # Main Gradio application entry point
+├── 📄 requirements-2025.txt           # Enhanced 2025 dependency specifications
+├── 📄 .env.example                    # Environment configuration template
+├── 📄 README.md                       # This comprehensive documentation
+├── 📄 AGENTS.md                       # AI collaboration guide
+├── 📄 CONTRIBUTING.md                 # Contribution guidelines
+├── 📄 LICENSE                         # MIT license
 │
-├── 📂 src/                            # 🏗 Core application modules
-│   ├── 📄 __init__.py                 # Package initialization
-│   ├── 📄 config.py                   # ⚙️ Enhanced configuration with YAML support
-│   ├── 📄 embeddings.py               # 🧠 Multi-backend embeddings (torch/onnx/openvino)
-│   ├── 📄 vectorstore.py              # 🗄️ Pinecone 7.x with gRPC integration  
-│   ├── 📄 rag.py                      # 🔍 RAG pipeline with MoE integration
-│   ├── 📄 ingest.py                   # 📥 Document ingestion orchestration
-│   ├── 📄 parsers.py                  # 📑 Multi-format document parsers
-│   ├── 📄 propositionizer.py          # 🧩 LLM-based atomic fact extraction
-│   ├── 📄 monitoring.py               # 📊 Cost tracking and performance metrics
-│   ├── 📄 security.py                 # 🔒 Security validation and hardening
+├── 📂 src/                            # Core application modules
+│   ├── 📄 config.py                   # Enhanced configuration with YAML support
+│   ├── 📄 embeddings.py               # Multi-backend embeddings (torch/onnx/openvino)
+│   ├── 📄 vectorstore.py              # Pinecone 7.x with gRPC integration
+│   ├── 📄 rag.py                      # RAG pipeline with MoE integration
+│   ├── 📄 ingest.py                   # Document ingestion orchestration
+│   ├── 📄 parsers.py                  # Multi-format document parsers
+│   ├── 📄 propositionizer.py          # LLM-based atomic fact extraction
+│   ├── 📄 monitoring.py               # Cost tracking and performance metrics
+│   ├── 📄 security.py                 # Security validation and hardening
+│   ├── 📄 cache.py                    # Intelligent caching system
+│   ├── 📄 batch_processing.py         # Efficient batch operations
 │   │
-│   ├── 📂 moe/                        # 🎭 Mixture of Experts implementation  
+│   ├── 📂 moe/                        # Mixture of Experts implementation
 │   │   ├── 📄 __init__.py              # MoE package initialization
 │   │   ├── 📄 config.py                # MoE-specific configuration
-│   │   ├── 📄 router.py                # 🧭 Expert routing with centroid management
-│   │   ├── 📄 gate.py                  # 🚪 Selective retrieval gating
-│   │   ├── 📄 rerank.py                # 🎯 Two-stage reranking pipeline
-│   │   └── 📄 evaluation.py            # 📈 MoE performance monitoring
+│   │   ├── 📄 router.py                # Expert routing with centroid management
+│   │   ├── 📄 gate.py                  # Selective retrieval gating
+│   │   ├── 📄 rerank.py                # Two-stage reranking pipeline
+│   │   └── 📄 evaluation.py            # MoE performance monitoring
 │   │
-│   ├── 📂 eval/                       # 🧪 Comprehensive evaluation framework
-│   │   ├── 📄 __init__.py              # Evaluation package initialization
-│   │   ├── 📄 metrics.py               # 📊 Hit@k, nDCG@k, span accuracy
-│   │   ├── 📄 benchmark.py             # 🏁 Automated benchmarking suite
-│   │   └── 📄 ab_testing.py            # ⚖️ A/B testing capabilities
-│   │
-│   ├── 📂 auth/                       # 🔐 Authentication and authorization
-│   │   ├── 📄 __init__.py              # Auth package initialization
-│   │   ├── 📄 jwt_handler.py           # 🎫 JWT token management
-│   │   ├── 📄 rate_limiter.py          # ⏱️ Rate limiting implementation
-│   │   └── 📄 session_manager.py       # 👥 User session management
-│   │
-│   └── 📂 utils/                      # 🛠 Utility functions and helpers
-│       ├── 📄 __init__.py              # Utils package initialization
-│       ├── 📄 logging.py               # 📝 Enhanced logging configuration
-│       ├── 📄 cache.py                 # 💾 Intelligent caching system
-│       └── 📄 helpers.py               # 🔧 Common utility functions
+│   └── 📂 eval/                       # Evaluation and testing framework
+│       ├── 📄 eval.py                  # Comprehensive evaluation metrics
+│       ├── 📄 benchmarks.py            # Performance benchmarking
+│       └── 📄 test_datasets.py         # Test dataset management
 │
-├── 📂 tests/                          # 🧪 Comprehensive testing suite
-│   ├── 📄 __init__.py                 # Test package initialization
-│   ├── 📄 conftest.py                 # 🔧 Pytest configuration and fixtures
-│   ├── 📄 test_config.py              # ⚙️ Configuration testing
-│   ├── 📄 test_embeddings.py          # 🧠 Embedding system tests
-│   ├── 📄 test_vectorstore.py         # 🗄️ Vector storage tests
-│   ├── 📄 test_rag.py                 # 🔍 RAG pipeline tests
-│   ├── 📄 test_moe.py                 # 🎭 MoE system tests
-│   ├── 📄 test_security.py            # 🔒 Security validation tests
-│   ├── 📄 test_integration.py         # 🔗 End-to-end integration tests
-│   └── 📄 test_performance.py         # ⚡ Performance benchmark tests
+├── 📂 docs/                           # Comprehensive documentation
+│   ├── 📂 runbooks/                   # Operational runbooks
+│   ├── 📂 specifications/             # Technical specifications
+│   ├── 📂 research/                   # Research and implementation guides
+│   └── 📂 factcheck/                  # Implementation readiness validation
 │
-├── 📂 scripts/                        # 🔧 Automation and utility scripts
-│   ├── 📄 __init__.py                 # Scripts package initialization
-│   ├── 📄 batch_ingest.py             # 📥 Batch document processing
-│   ├── 📄 benchmark.py                # 📊 Performance benchmarking
-│   ├── 📄 migration.py                # 🔄 Database migration utilities
-│   ├── 📄 cleanup.py                  # 🧹 Cache and data cleanup
-│   └── 📄 deploy.py                   # 🚀 Production deployment automation
+├── 📂 tests/                          # Comprehensive test suite
+│   ├── 📄 test_integration.py          # Integration testing
+│   ├── 📄 test_performance.py          # Performance testing
+│   ├── 📄 test_security.py             # Security testing
+│   └── 📂 unit/                        # Unit tests for all modules
 │
-├── 📂 data/                           # 💾 Data storage directory
-│   ├── 📂 uploads/                    # 📁 Uploaded document storage
-│   ├── 📂 cache/                      # 🗃️ Model and result caching
-│   └── 📂 exports/                    # 📤 Data export directory
+├── 📂 config/                         # Configuration templates
+│   ├── 📄 development.yaml             # Development environment config
+│   ├── 📄 production.yaml              # Production environment config
+│   └── 📄 security-templates.yaml      # Security configuration templates
 │
-├── 📂 logs/                           # 📋 Application logging
-│   ├── 📄 app.log                     # General application logs
-│   ├── 📄 security.log               # 🔒 Security event logging
-│   └── 📄 performance.log             # ⚡ Performance monitoring logs
-│
-├── 📂 docs/                           # 📖 Extended documentation
-│   ├── 📄 ARCHITECTURE.md             # 🏗 Detailed architecture guide
-│   ├── 📄 API_REFERENCE.md            # 📚 Complete API documentation
-│   ├── 📄 DEPLOYMENT.md               # 🚀 Production deployment guide
-│   ├── 📄 SECURITY.md                 # 🔒 Security implementation guide
-│   └── 📄 TROUBLESHOOTING.md          # 🔧 Common issues and solutions
-│
-├── 📂 configs/                        # ⚙️ Configuration files
-│   ├── 📄 default.yaml                # Default configuration settings
-│   ├── 📄 production.yaml             # Production environment config
-│   └── 📄 development.yaml            # Development environment config
-│
-└── 📂 memory-bank/                    # 🧠 Project context and specifications
-    ├── 📄 productContext.md           # 📋 Product requirements document
-    ├── 📄 qa_test_plan.md             # 🧪 Comprehensive QA testing plan
-    └── 📄 AGENTS.md                   # 🤖 AI collaboration guide
+└── 📂 scripts/                        # Utility and deployment scripts
+    ├── 📄 setup.sh                     # Initial setup script
+    ├── 📄 deploy.sh                    # Deployment automation
+    ├── 📄 backup.sh                    # Backup and recovery
+    └── 📄 cleanup-repo.ps1             # Repository maintenance
 ```
-
-### Key Directories Explained
-
-<details>
-<summary><strong>📂 src/ - Core Application Modules</strong></summary>
-
-**Primary Modules:**
-- `config.py`: Enhanced configuration management with YAML support, environment validation, and MoE settings
-- `embeddings.py`: Multi-backend sentence transformers with performance optimizations and intelligent caching
-- `vectorstore.py`: Pinecone 7.x integration with gRPC performance improvements and enhanced error handling
-- `rag.py`: Complete RAG pipeline orchestration with optional MoE enhancement and real-time cost monitoring
-
-**Specialized Directories:**
-- `moe/`: Complete Mixture of Experts implementation with routing, gating, and reranking components
-- `eval/`: Comprehensive evaluation framework with retrieval metrics, automated benchmarking, and A/B testing
-- `auth/`: Enterprise-grade authentication with JWT tokens, rate limiting, and session management
-- `utils/`: Common utilities including intelligent caching, enhanced logging, and helper functions
-
-</details>
-
-<details>
-<summary><strong>📂 tests/ - Comprehensive Testing Suite</strong></summary>
-
-**Test Coverage Areas:**
-- **Unit Tests**: Individual component testing with >90% coverage
-- **Integration Tests**: End-to-end pipeline validation  
-- **Performance Tests**: Benchmarking and load testing
-- **Security Tests**: Authentication, authorization, and input validation
-- **MoE Tests**: Specialized testing for Mixture of Experts components
-
-</details>
-
-<details>
-<summary><strong>📂 scripts/ - Automation Utilities</strong></summary>
-
-**Available Scripts:**
-- `batch_ingest.py`: Efficient batch processing of large document collections
-- `benchmark.py`: Performance benchmarking with detailed metrics
-- `migration.py`: Database schema migration and data transformation utilities
-- `deploy.py`: Production deployment automation with health checks
-
-</details>
 
 ---
 
-## 🛠 Development Guide
+## 🔧 Development Guide
 
 ### Development Environment Setup
 
-#### 1. Clone and Setup Development Environment
+#### Local Development
 
 ```bash
-# Clone repository
+# Clone and setup development environment
 git clone https://github.com/JackSmack1971/personal-rag-propo.git
 cd personal-rag-propo
 
-# Create development virtual environment
-python3 -m venv venv-dev
-source venv-dev/bin/activate  # or .\venv-dev\Scripts\activate on Windows
-
 # Install development dependencies
 pip install -r requirements-dev.txt
-```
 
-#### 2. Pre-commit Hooks Setup
-
-```bash
-# Install pre-commit hooks for code quality
+# Configure pre-commit hooks
 pre-commit install
 
-# Run hooks manually
-pre-commit run --all-files
+# Run in development mode
+export ENVIRONMENT=development
+python app.py --debug
 ```
 
-#### 3. Development Configuration
-
-Create `.env.development`:
-```env
-# Development-specific settings
-DEBUG=true
-LOG_LEVEL=DEBUG
-GRADIO_DEBUG=true
-
-# Use smaller models for faster development
-EMBED_MODEL=BAAI/bge-small-en-v1.5
-MOE_ENABLED=false
-
-# Development API endpoints
-PINECONE_ENVIRONMENT=development
-OPENROUTER_DEBUG=true
-```
-
-### Build and Test Procedures
-
-#### Running Tests
+#### Docker Development
 
 ```bash
-# Run all tests with coverage
-pytest tests/ --cov=src --cov-report=html --cov-report=term-missing
+# Build development container
+docker build -f Dockerfile.dev -t personal-rag-dev .
 
-# Run specific test categories
-pytest tests/test_embeddings.py -v          # Embedding tests
-pytest tests/test_moe.py -v                 # MoE system tests  
-pytest tests/test_integration.py -v         # Integration tests
-pytest tests/test_performance.py -v         # Performance benchmarks
-
-# Run tests with specific markers
-pytest -m "not slow" -v                     # Skip slow tests
-pytest -m "security" -v                     # Run security tests only
+# Run with hot reloading
+docker run -p 7860:7860 -v $(pwd):/app personal-rag-dev
 ```
 
-#### Performance Benchmarking
+### Code Quality Standards
+
+#### Automated Quality Checks
 
 ```bash
-# Run comprehensive performance benchmarks
-python scripts/benchmark.py --full-suite
+# Format code
+black src/ tests/
+isort src/ tests/
 
-# Benchmark specific components
-python scripts/benchmark.py --component embeddings
-python scripts/benchmark.py --component moe
-python scripts/benchmark.py --component retrieval
-```
-
-#### Code Quality Checks
-
-```bash
-# Format code with black
-black src/ tests/ scripts/
-
-# Sort imports with isort  
-isort src/ tests/ scripts/
-
-# Type checking with mypy
+# Lint and security checks
+flake8 src/ tests/
+bandit -r src/
 mypy src/
 
-# Linting with flake8
-flake8 src/ tests/ scripts/
+# Run comprehensive tests
+pytest --cov=src --cov-report=html
+```
 
-# Security scanning with bandit
-bandit -r src/
+#### Contribution Workflow
+
+1. **Fork Repository**: Create personal fork on GitHub
+
+2. **Create Feature Branch**:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Implement Changes**:
+   - Follow existing code patterns and architecture
+   - Add comprehensive type hints and docstrings
+   - Include unit tests for new functionality
+
+4. **Run Quality Checks**:
+   ```bash
+   # Lint and format code
+   black src/ tests/
+   flake8 src/ tests/
+   isort src/ tests/
+   
+   # Run security scan
+   bandit -r src/
+   
+   # Run tests
+   pytest
+   ```
+
+5. **Submit Pull Request**:
+   - Include clear description of changes
+   - Link to relevant issues or specifications
+   - Ensure all CI checks pass
+
+### Testing Strategy
+
+#### Unit Tests
+
+```python
+# Example: Testing embedding functionality
+import pytest
+from src.embeddings import EmbeddingEngine
+from src.config import Config
+
+def test_embedding_generation():
+    config = Config()
+    engine = EmbeddingEngine(config)
+    
+    text = "This is a test document"
+    embedding = engine.embed_text(text)
+    
+    assert embedding is not None
+    assert len(embedding) == 384  # BGE-small dimension
+    assert isinstance(embedding, np.ndarray)
+
+def test_batch_embedding_efficiency():
+    engine = EmbeddingEngine(config)
+    texts = ["Text 1", "Text 2", "Text 3"]
+    
+    # Batch should be more efficient than individual
+    start_time = time.time()
+    batch_embeddings = engine.embed_batch(texts)
+    batch_time = time.time() - start_time
+    
+    start_time = time.time()
+    individual_embeddings = [engine.embed_text(text) for text in texts]
+    individual_time = time.time() - start_time
+    
+    assert batch_time < individual_time
+```
+
+#### Integration Tests
+
+```python
+# Example: End-to-end RAG pipeline test
+def test_full_rag_pipeline():
+    config = Config()
+    rag = RAGPipeline(config)
+    
+    # Ingest test document
+    test_doc = "test_data/sample_document.pdf"
+    ingest_result = rag.ingest_document(test_doc)
+    assert ingest_result.success
+    
+    # Query the document
+    query = "What is the main topic discussed?"
+    response = rag.answer_question(query)
+    
+    assert response.answer is not None
+    assert len(response.citations) > 0
+    assert response.confidence > 0.5
+```
+
+---
+
+## 🛡️ Security & Privacy
+
+### Security Architecture
+
+#### Multi-Layer Security Model
+
+```mermaid
+graph TD
+    subgraph "Application Security Layers"
+        INPUT[Input Validation]
+        AUTH[Authentication]
+        AUTHZ[Authorization]
+        CRYPTO[Encryption]
+    end
+    
+    subgraph "RAG-Specific Security"
+        POISON[RAG Poisoning Detection]
+        INJECT[Injection Prevention]
+        LEAK[Data Leakage Protection]
+        CITE[Citation Validation]
+    end
+    
+    subgraph "Infrastructure Security"
+        NETWORK[Network Security]
+        CONTAINER[Container Security]
+        STORAGE[Secure Storage]
+        AUDIT[Audit Logging]
+    end
+    
+    INPUT --> POISON
+    AUTH --> INJECT
+    AUTHZ --> LEAK
+    CRYPTO --> CITE
+    POISON --> NETWORK
+    INJECT --> CONTAINER
+    LEAK --> STORAGE
+    CITE --> AUDIT
+    
+    style POISON fill:#ffcdd2
+    style INJECT fill:#f8bbd9
+    style LEAK fill:#f3e5f5
+    style CITE fill:#e1bee7
+```
+
+### Security Features
+
+#### RAG Poisoning Protection
+
+- **Content Validation**: Multi-layer document scanning for malicious content
+- **Query Analysis**: Detection of prompt injection attempts
+- **Response Filtering**: Output sanitization and safety checks
+- **Anomaly Detection**: Behavioral pattern analysis for unusual activities
+
+#### Data Privacy Controls
+
+- **Local Processing**: Documents processed locally when possible
+- **Encryption**: End-to-end encryption for all data transmission
+- **Access Controls**: Role-based permissions and authentication
+- **Data Retention**: Configurable retention policies with automatic cleanup
+
+#### Security Configuration
+
+```python
+# Enable comprehensive security features
+from src.security import SecurityManager
+
+security = SecurityManager(config)
+
+# Configure RAG poisoning detection
+security.enable_rag_poisoning_detection(
+    content_scanning=True,
+    query_analysis=True,
+    response_filtering=True,
+    anomaly_detection=True
+)
+
+# Setup access controls
+security.configure_authentication(
+    method="oauth2",
+    providers=["google", "github"],
+    session_timeout=3600
+)
+
+# Enable audit logging
+security.enable_audit_logging(
+    level="comprehensive",
+    retention_days=90,
+    encryption=True
+)
+```
+
+---
+
+## 📊 Performance & Monitoring
+
+### Performance Optimization
+
+#### Multi-Backend Support
+
+The system automatically selects the optimal backend based on hardware:
+
+| Backend | Use Case | Performance | Memory |
+|---------|----------|-------------|--------|
+| **OpenVINO** | CPU inference | 4x faster | 40% less |
+| **PyTorch** | GPU acceleration | Baseline | Baseline |
+| **ONNX** | Balanced performance | 2x faster | 20% less |
+
+#### Caching Strategy
+
+```python
+# Intelligent multi-level caching
+from src.cache import CacheManager
+
+cache = CacheManager(config)
+
+# Model caching with backend-specific keys
+cache.enable_model_caching(
+    backends=["openvino", "torch", "onnx"],
+    memory_limit="4GB",
+    disk_cache=True
+)
+
+# Result caching with TTL
+cache.enable_result_caching(
+    ttl_seconds=3600,
+    max_entries=10000,
+    compression=True
+)
+
+# Query caching for repeated questions
+cache.enable_query_caching(
+    similarity_threshold=0.95,
+    ttl_seconds=1800
+)
+```
+
+### Monitoring Dashboard
+
+#### Key Performance Metrics
+
+```mermaid
+graph LR
+    subgraph "Performance KPIs"
+        QPS[Queries/Second]
+        LATENCY[Response Latency]
+        ACCURACY[Retrieval Accuracy]
+        COST[Cost per Query]
+    end
+    
+    subgraph "System Metrics"
+        CPU[CPU Utilization]
+        MEMORY[Memory Usage]
+        DISK[Disk I/O]
+        NETWORK[Network Traffic]
+    end
+    
+    subgraph "Business Metrics"
+        USERS[Active Users]
+        DOCUMENTS[Documents Indexed]
+        SUCCESS[Success Rate]
+        SATISFACTION[User Satisfaction]
+    end
+    
+    QPS --> CPU
+    LATENCY --> MEMORY
+    ACCURACY --> DISK
+    COST --> NETWORK
+    
+    CPU --> USERS
+    MEMORY --> DOCUMENTS
+    DISK --> SUCCESS
+    NETWORK --> SATISFACTION
+    
+    style QPS fill:#4caf50
+    style LATENCY fill:#ff9800
+    style ACCURACY fill:#2196f3
+    style COST fill:#9c27b0
+```
+
+#### Real-time Monitoring
+
+```python
+from src.monitoring import PerformanceMonitor, CostTracker
+
+# Initialize monitoring
+monitor = PerformanceMonitor(config)
+cost_tracker = CostTracker(config)
+
+# Real-time metrics collection
+@monitor.track_performance
+def process_query(query: str) -> str:
+    # RAG processing logic
+    response = rag.answer_question(query)
+    
+    # Track costs
+    cost_tracker.log_api_usage(
+        provider="openrouter",
+        tokens_used=response.token_count,
+        cost=response.estimated_cost
+    )
+    
+    return response
+
+# Generate performance reports
+daily_report = monitor.generate_daily_report()
+cost_analysis = cost_tracker.analyze_monthly_costs()
+```
+
+---
+
+## 🚀 Deployment
+
+### Production Deployment
+
+#### Docker Deployment
+
+```dockerfile
+# Production-ready Dockerfile
+FROM python:3.11-slim
+
+# Security hardening
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Application setup
+WORKDIR /app
+COPY requirements-2025.txt .
+RUN pip install --no-cache-dir -r requirements-2025.txt
+
+COPY --chown=appuser:appuser . .
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+EXPOSE 7860
+CMD ["python", "app.py", "--host", "0.0.0.0", "--port", "7860"]
+```
+
+#### Kubernetes Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: personal-rag
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: personal-rag
+  template:
+    metadata:
+      labels:
+        app: personal-rag
+    spec:
+      containers:
+      - name: personal-rag
+        image: personal-rag:latest
+        ports:
+        - containerPort: 7860
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2"
+          limits:
+            memory: "8Gi"
+            cpu: "4"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: personal-rag-service
+spec:
+  selector:
+    app: personal-rag
+  ports:
+  - port: 80
+    targetPort: 7860
+  type: LoadBalancer
+```
+
+### Scaling Considerations
+
+#### Horizontal Scaling
+
+- **Load Balancing**: Distribute queries across multiple instances
+- **Shared State**: Use Redis for shared caching and session management
+- **Database Scaling**: Pinecone serverless scales automatically
+- **Resource Management**: Auto-scaling based on CPU and memory usage
+
+#### Vertical Scaling
+
+- **Memory Optimization**: Efficient model loading and caching
+- **CPU Optimization**: Multi-backend support for optimal performance  
+- **GPU Acceleration**: CUDA support for high-throughput scenarios
+- **Storage Optimization**: Compressed caching and efficient indexing
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from the community! Here's how to get started:
+
+### Development Setup
+
+```bash
+# 1. Fork the repository on GitHub
+# 2. Clone your fork
+git clone https://github.com/your-username/personal-rag-propo.git
+cd personal-rag-propo
+
+# 3. Set up development environment
+python -m venv venv
+source venv/bin/activate  # Windows: .\venv\Scripts\activate
+pip install -r requirements-dev.txt
+
+# 4. Install pre-commit hooks
+pre-commit install
+
+# 5. Create feature branch
+git checkout -b feature/your-amazing-feature
 ```
 
 ### Contribution Guidelines
 
-#### Code Style Conventions
+#### Code Standards
 
-- **Python Style**: Follow PEP 8 with line length of 88 characters (Black default)
-- **Type Hints**: Mandatory for all function signatures and class attributes
-- **Docstrings**: Google-style docstrings for all public functions and classes
-- **Import Organization**: Use isort with the configuration in `pyproject.toml`
-
-#### Git Workflow
-
-```bash
-# 1. Create feature branch
-git checkout -b feature/your-feature-name
-
-# 2. Make changes and commit
-git add .
-git commit -m "feat: add new feature description"
-
-# 3. Push and create PR
-git push origin feature/your-feature-name
-```
-
-#### Commit Message Convention
-
-Follow [Conventional Commits](https://conventionalcommits.org/):
-- `feat:` New feature
-- `fix:` Bug fix  
-- `docs:` Documentation changes
-- `style:` Code style changes (formatting, etc.)
-- `refactor:` Code refactoring
-- `test:` Adding/updating tests
-- `perf:` Performance improvements
+- **Python Style**: Follow PEP 8 with Black formatting (line length 88)
+- **Type Hints**: All functions must include comprehensive type annotations
+- **Documentation**: Google-style docstrings for all public functions
+- **Testing**: Minimum 80% code coverage for new features
 
 #### Pull Request Process
 
-1. **Pre-PR Checklist**:
-   - [ ] All tests pass locally
-   - [ ] Code coverage maintains >90%
-   - [ ] Documentation updated
-   - [ ] Security review completed
+1. **Code Quality**: Ensure all automated checks pass
+2. **Testing**: Add comprehensive tests for new functionality
+3. **Documentation**: Update relevant documentation and examples
+4. **Review**: Participate constructively in the code review process
 
-2. **PR Description Template**:
-   ```markdown
-   ## Description
-   Brief description of changes
-   
-   ## Type of Change
-   - [ ] Bug fix
-   - [ ] New feature  
-   - [ ] Breaking change
-   - [ ] Documentation update
-   
-   ## Testing
-   - [ ] Unit tests added/updated
-   - [ ] Integration tests pass
-   - [ ] Manual testing completed
-   
-   ## Security Considerations
-   - [ ] No sensitive data exposed
-   - [ ] Input validation implemented
-   - [ ] Authentication/authorization reviewed
-   ```
+#### Areas for Contribution
 
-### Architecture Decision Records (ADRs)
-
-Document major architectural decisions in `docs/adr/`:
-
-```markdown
-# ADR-001: Adoption of Mixture of Experts Architecture
-
-## Status
-Accepted
-
-## Context  
-Need to improve retrieval accuracy for complex queries...
-
-## Decision
-Implement MoE architecture with expert routing...
-
-## Consequences
-- Improved accuracy by 15-20%
-- Increased complexity in codebase
-- Higher computational requirements
-```
-
-### Local Development Tips
-
-#### Quick Development Commands
-
-```bash
-# Start development server with auto-reload
-python app.py --reload
-
-# Run with specific configuration
-python app.py --config configs/development.yaml
-
-# Enable debug logging
-LOG_LEVEL=DEBUG python app.py
-
-# Test specific features
-python -c "from src.moe import test_moe_pipeline; test_moe_pipeline()"
-```
-
-#### Debugging Tools
-
-```python
-# Enable debug mode in embeddings
-from src.embeddings import get_embedder
-embedder = get_embedder("BAAI/bge-small-en-v1.5", debug=True)
-
-# Monitor performance metrics
-from src.monitoring import get_performance_stats
-stats = get_performance_stats()
-print(stats)
-
-# Test vector operations
-from src.vectorstore import VectorStore
-vs = VectorStore(debug=True)
-vs.test_connection()
-```
+- 🐛 **Bug Fixes**: Report and fix issues
+- ⚡ **Performance**: Optimize algorithms and resource usage
+- 🔧 **Features**: Implement new retrieval algorithms or UI improvements
+- 📚 **Documentation**: Improve guides, examples, and API documentation
+- 🧪 **Testing**: Expand test coverage and add edge cases
 
 ---
 
-## 📚 Additional Documentation
+## 📄 License & Legal
 
-### Extended Resources
-
-- **[📖 Complete API Reference](docs/API_REFERENCE.md)**: Detailed API documentation with examples
-- **[🏗 Architecture Guide](docs/ARCHITECTURE.md)**: Deep dive into system architecture and design patterns  
-- **[🚀 Deployment Guide](docs/DEPLOYMENT.md)**: Production deployment strategies and best practices
-- **[🔒 Security Guide](docs/SECURITY.md)**: Security implementation details and compliance
-- **[🔧 Troubleshooting Guide](docs/TROUBLESHOOTING.md)**: Common issues and comprehensive solutions
-
-### Frequently Asked Questions
-
-<details>
-<summary><strong>❓ How do I enable MoE (Mixture of Experts) mode?</strong></summary>
-
-Set `MOE_ENABLED=true` in your `.env` file. This enables:
-- Expert routing based on query similarity
-- Selective retrieval gating with adaptive K-selection  
-- Two-stage reranking with cross-encoder models
-- Performance monitoring and A/B testing capabilities
-
-Note: MoE mode requires additional computational resources but provides 15-20% improvement in retrieval accuracy.
-
-</details>
-
-<details>
-<summary><strong>💰 How much does it cost to run this system?</strong></summary>
-
-Costs depend on usage patterns:
-- **Embedding Models**: Free (runs locally)
-- **Pinecone**: $0.096/hour for 1 pod (free tier available)
-- **OpenRouter**: ~$0.002-$0.02 per query depending on model chosen
-- **Estimated Monthly**: $10-50 for moderate usage (100-500 queries/month)
-
-Use the built-in cost estimation tool for personalized projections.
-
-</details>
-
-<details>
-<summary><strong>🔒 Is my data secure and private?</strong></summary>
-
-Yes, the system prioritizes privacy:
-- Documents processed locally, never sent to third parties for embedding
-- Only user queries and retrieved context sent to LLM providers
-- Optional authentication and rate limiting
-- Comprehensive security logging
-- SSL/HTTPS support for production deployments
-
-See the [Security Guide](docs/SECURITY.md) for detailed security measures.
-
-</details>
-
-<details>
-<summary><strong>⚡ How can I improve performance?</strong></summary>
-
-Several optimization strategies:
-- Enable model caching (`ENABLE_MODEL_CACHING=true`)
-- Use OpenVINO backend for 4x CPU performance (`SENTENCE_TRANSFORMERS_BACKEND=openvino`)
-- Optimize batch sizes (`MAX_BATCH_SIZE=32`)
-- Enable MoE mode for better retrieval accuracy
-- Use GPU acceleration if available
-
-</details>
-
-<details>
-<summary><strong>📄 What document formats are supported?</strong></summary>
-
-Currently supported formats:
-- **PDF**: Full text extraction with metadata preservation
-- **TXT**: Plain text with encoding auto-detection
-- **MD**: Markdown with structure preservation
-
-Planned support: DOCX, EPUB, HTML, CSV, JSON
-
-</details>
-
-### Changelog and Version History
-
-#### Version 2025.1.0 (Current)
-- 🎉 **Major Technology Stack Upgrade**: Gradio 5.x, PyTorch 2.8.x, Pinecone 7.x
-- 🎭 **MoE Architecture**: Complete Mixture of Experts implementation
-- ⚡ **Performance**: 4x inference speedup with OpenVINO, enhanced caching
-- 🔒 **Security**: JWT authentication, rate limiting, SSL/HTTPS support
-- 📊 **Monitoring**: Real-time cost tracking, performance metrics, health checks
-- 🧪 **Testing**: Comprehensive test suite with >90% coverage
-
-#### Previous Versions
-- **2024.3.0**: Initial MoE research integration
-- **2024.2.0**: Enhanced security and authentication  
-- **2024.1.0**: Multi-backend embedding support
-- **2023.4.0**: Original release with basic RAG pipeline
-
-### License and Legal
+### License Information
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-**Third-Party Licenses:**
-- Sentence-Transformers: Apache 2.0
-- Gradio: Apache 2.0  
-- PyTorch: BSD 3-Clause
-- Pinecone Python Client: Apache 2.0
+### Third-Party Licenses
 
-### Credits and Acknowledgments
+Key dependencies and their licenses:
+- **Gradio**: Apache License 2.0
+- **Sentence-Transformers**: Apache License 2.0
+- **PyTorch**: BSD 3-Clause License
+- **Pinecone**: Pinecone Terms of Service
+- **OpenRouter**: OpenRouter API Terms
 
-#### Core Contributors
-- **JackSmack1971**: Original creator and maintainer
-- **Community Contributors**: Feature enhancements and bug fixes
+### Data Privacy & Compliance
 
-#### Technology Partners
-- **[Sentence Transformers](https://sbert.net/)**: Excellent embedding framework and model ecosystem
-- **[Pinecone](https://pinecone.io/)**: Robust serverless vector database infrastructure  
-- **[Gradio](https://gradio.app/)**: Intuitive web interface framework with production capabilities
-- **[OpenRouter](https://openrouter.ai/)**: Democratized access to 100+ language models
-- **[HuggingFace](https://huggingface.co/)**: Model hosting and transformer ecosystem
+- **GDPR Compliant**: Built-in privacy controls and data retention policies
+- **SOC 2**: Security controls aligned with SOC 2 Type II requirements
+- **OWASP**: Security practices following OWASP LLM Top 10 2025
 
-#### Research Citations
+---
 
-This system builds upon cutting-edge research in retrieval-augmented generation:
-- **Dense Passage Retrieval**: Karpukhin et al. (2020)
-- **Mixture of Experts**: Shazeer et al. (2017)  
-- **Sentence Embeddings**: Reimers & Gurevych (2019)
-- **Cross-Encoder Reranking**: Nogueira & Cho (2019)
+## 🙏 Acknowledgments
+
+We extend our gratitude to the open-source community and these exceptional projects:
+
+- **[Sentence Transformers](https://www.sbert.net/)**: For the excellent embedding framework and multi-backend support
+- **[Pinecone](https://www.pinecone.io/)**: For robust, serverless vector database infrastructure
+- **[Gradio](https://gradio.app/)**: For the intuitive, production-ready web interface framework
+- **[OpenRouter](https://openrouter.ai/)**: For democratized access to cutting-edge language models
+- **[PyTorch](https://pytorch.org/)**: For the foundational machine learning framework
+- **[Hugging Face](https://huggingface.co/)**: For the transformers ecosystem and model hosting
+
+### Community Contributors
+
+Special thanks to all contributors who have helped improve this project through code, documentation, testing, and feedback.
+
+---
+
+## 📞 Support & Community
+
+### Getting Help
+
+- **📖 Documentation**: Comprehensive guides in the [docs/](docs/) directory
+- **🐛 Issue Tracker**: [GitHub Issues](https://github.com/JackSmack1971/personal-rag-propo/issues)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/JackSmack1971/personal-rag-propo/discussions)
+- **📧 Email**: project-maintainer@example.com
+
+### Roadmap & Future Features
+
+#### Q4 2025
+- 🔄 **Async Architecture**: Complete async/await implementation
+- 🌐 **Multi-language Support**: Document processing in 20+ languages  
+- 🎯 **Advanced MoE**: Dynamic expert creation and specialized domain routing
+
+#### Q1 2026
+- 🤖 **Agent Framework**: Multi-agent collaboration for complex queries
+- 📱 **Mobile Apps**: Native iOS and Android applications
+- ⚡ **Real-time Collaboration**: Multi-user document annotation and sharing
 
 ---
 
 <div align="center">
 
-### 🌟 **Star this repository if you find it useful!** 🌟
+## ⭐ Star this repository if you find it useful!
 
-[![GitHub Stars](https://img.shields.io/github/stars/JackSmack1971/personal-rag-propo?style=social)](https://github.com/JackSmack1971/personal-rag-propo/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/JackSmack1971/personal-rag-propo?style=social)](https://github.com/JackSmack1971/personal-rag-propo/network)
+[![GitHub stars](https://img.shields.io/github/stars/JackSmack1971/personal-rag-propo?style=social)](https://github.com/JackSmack1971/personal-rag-propo/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/JackSmack1971/personal-rag-propo?style=social)](https://github.com/JackSmack1971/personal-rag-propo/network/members)
 
-**[📝 Report Bug](https://github.com/JackSmack1971/personal-rag-propo/issues)** • 
-**[💡 Request Feature](https://github.com/JackSmack1971/personal-rag-propo/issues)** • 
-**[📖 Documentation](docs/)** • 
-**[💬 Discussions](https://github.com/JackSmack1971/personal-rag-propo/discussions)**
+[Report Bug](https://github.com/JackSmack1971/personal-rag-propo/issues) • 
+[Request Feature](https://github.com/JackSmack1971/personal-rag-propo/issues) • 
+[View Documentation](docs/) • 
+[Join Community](https://github.com/JackSmack1971/personal-rag-propo/discussions)
 
 </div>
 
 ---
 
-*📅 Generated on: Sunday, August 31, 2025*  
-*🔍 Analysis Timestamp: 2025-08-31T16:50:00Z*  
-*📦 Repository Version: Enhanced 2025 Stack with Advanced MoE Retrieval*  
-*🤖 Documentation Agent: Claude Sonnet 4*
+<div align="center">
+<sub>
+
+**Built with ❤️ by the Personal RAG Community**
+
+*Generated on: Sunday, August 31, 2025*  
+*Analysis Timestamp: 2025-08-31T16:50:00Z*  
+*Repository Version: Enhanced 2025 Stack*
+
+</sub>
+</div>
